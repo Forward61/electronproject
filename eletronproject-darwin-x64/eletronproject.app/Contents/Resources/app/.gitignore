@@ -7,4 +7,6 @@ node_modules/
 npm-debug.log
 npm-debug.log.*
 thumbs.db
+eletronproject-darwin-x64/*
+
 !.gitkeep
