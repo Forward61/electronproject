@@ -4,44 +4,19 @@ import {BrowserWindow} from "electron";
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="活动名称" prop="name">
             <el-input v-model="ruleForm.name"></el-input>
+
         </el-form-item>
-        <el-form-item label="活动区域" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
+
+        <el-form-item label="交易代码" prop="jydm">
+            <el-input v-model="ruleForm.jydm"></el-input>
         </el-form-item>
-<!--        <el-form-item label="活动时间" required>-->
-<!--            <el-col :span="11">-->
-<!--                <el-form-item prop="date1">-->
-<!--                    <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>-->
-<!--                </el-form-item>-->
-<!--            </el-col>-->
-<!--            <el-col class="line" :span="2">-</el-col>-->
-<!--            <el-col :span="11">-->
-<!--                <el-form-item prop="date2">-->
-<!--                    <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>-->
-<!--                </el-form-item>-->
-<!--            </el-col>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="即时配送" prop="delivery">-->
-<!--            <el-switch v-model="ruleForm.delivery"></el-switch>-->
-<!--        </el-form-item>-->
-        <el-form-item label="活动性质" prop="type">
-            <el-checkbox-group v-model="ruleForm.type">
-                <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                <el-checkbox label="地推活动" name="type"></el-checkbox>
-                <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-            </el-checkbox-group>
+
+
+        <el-form-item label="业务校验码" prop="ywjym">
+            <el-input  v-model="ruleForm.ywjym"></el-input>
         </el-form-item>
-        <el-form-item label="特殊资源" prop="resource">
-            <el-radio-group v-model="ruleForm.resource">
-                <el-radio label="线上品牌商赞助"></el-radio>
-                <el-radio label="线下场地免费"></el-radio>
-            </el-radio-group>
-        </el-form-item>
-        <el-form-item label="活动形式" prop="desc">
+
+        <el-form-item label="返回" prop="desc">
             <el-input  v-model="ruleForm.desc"></el-input>
         </el-form-item>
         <el-form-item>
@@ -52,11 +27,13 @@ import {BrowserWindow} from "electron";
     </div>
 </template>
 <script>
-    var jmz = {};
-    jmz.GetLength = function(str) {
+    function getLength(str) {
         ///<summary>获得字符串实际长度，中文2，英文1</summary>
         ///<param name="str">要获得长度的字符串</param>
-        var realLength = 0, len = str.length, charCode = -1;
+        var str=str+'';
+        var realLength = 0;
+        var len = str.length;
+        var charCode = -1;
         for (var i = 0; i < len; i++) {
             charCode = str.charCodeAt(i);
             if (charCode >= 0 && charCode <= 128)
@@ -66,7 +43,15 @@ import {BrowserWindow} from "electron";
         }
         return realLength;
     };
+    function getRealLengthReqString(str,length) {
+        if (str.length > length){
+            alert(str +"的值超长了！");
+        }else
+        {
 
+        }
+
+    }
     function createWindow () {
         /**
          * Initial window options
@@ -83,18 +68,50 @@ import {BrowserWindow} from "electron";
             mainWindow = null
         })
     }
+    //右填充空格
+    function rightPad(str,length) {
+        var templenth= getLength(str);
+        return str+ new Array(length-templenth).join(' ',  '') ;
+    }
+
+    //生成从minNum到maxNum的随机数
+    function randomNum(minNum,maxNum){
+        switch(arguments.length){
+            case 1:
+                return parseInt(Math.random()*minNum+1,10);
+                break;
+            case 2:
+                return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
     export default {
         data() {
             return {
+                str: '',
                 ruleForm: {
                     name: '',
+                    nameLength: '',
                     region: '',
                     date1: '',
                     date2: '',
                     delivery: false,
                     type: [],
                     resource: '',
-                    desc: ''
+                    desc: '',
+                    // jydm: '',
+                    // jydmLength: '2',
+                    yhdm: '3018',
+                    yhdm: '4',
+                    ywjym: '',
+                    ywjymLength: '6',
+                    jgzhhm: '',
+                    jgzhhmLength: '100',
+                    jgzh: '',
+                    jgzhLength: '30'
                 },
                 rules: {
                     name: [
@@ -127,10 +144,14 @@ import {BrowserWindow} from "electron";
                 var _this = this;
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log("字符串的长度 +" +jmz.GetLength(_this.ruleForm.name))
+                        // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
+                        var bc= '    30';
+                        var jydm = '11';
+                        _this.ruleForm.ywjym = randomNum(10000,99999);
+                        console.log("业务校验码 ：" + _this.ruleForm.ywjym);
+                        var jmms = '10';
 
-
-
+                        console.log(rightPad(1022,6));
 
                         var net = require('net');
                         var HOST = '118.24.52.46';
