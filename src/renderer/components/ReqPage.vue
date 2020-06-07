@@ -15,6 +15,18 @@ import {BrowserWindow} from "electron";
         <el-form-item label="监管账户" prop="jgzh">
             <el-input  v-model="ruleForm.jgzh"></el-input>
         </el-form-item>
+        <el-form-item label="中心操作员" prop="zxczy">
+            <el-input  v-model="ruleForm.zxczy"></el-input>
+        </el-form-item>
+<!--        <el-form-item label="流水号" prop="lsh">-->
+<!--            <el-input  v-model="ruleForm.lsh"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="限制时间" prop="xzsj">-->
+<!--            <el-input  v-model="ruleForm.xzsj"></el-input>-->
+<!--        </el-form-item>-->
+        <el-form-item label="限制说明" prop="xzsm">
+            <el-input  v-model="ruleForm.xzsm"></el-input>
+        </el-form-item>
 
         <el-form-item label="返回" prop="desc">
             <el-input  v-model="ruleForm.desc"></el-input>
@@ -88,7 +100,18 @@ import {BrowserWindow} from "electron";
                 break;
         }
     }
-    export default {
+    function formatDate(time, format = 'YYYY/MM/DD hh:mm:ss') {
+        var date = new Date(time);
+        var year = date.getFullYear(),
+            month = date.getMonth() + 1,
+            //月份是从0开始的
+            day = date.getDate(), hour = date.getHours(), min = date.getMinutes(), sec = date.getSeconds();
+        var preArr = Array.apply(null,Array(10)).map(function(elem, index) { return '0'+index; });////开个长度为10的数组 格式为 00 01 02 03
+        var newTime = format.replace(/YYYY/g,year) .replace(/MM/g,preArr[month]||month) .replace(/DD/g,preArr[day]||day) .replace(/hh/g,preArr[hour]||hour) .replace(/mm/g,preArr[min]||min) .replace(/ss/g,preArr[sec]||sec);
+        return newTime;
+    }
+
+            export default {
         data() {
             return {
                 str: '',
@@ -106,7 +129,10 @@ import {BrowserWindow} from "electron";
                     // jydmLength: '2',
                     jgzhmc: '',
                     jgzh: '',
-                    jgzhLength: '30'
+                    zxczy: '',
+                    lsh:'',
+                    xzsj: '',
+                    xzsm: ''
                 },
                 rules: {
                     name: [
@@ -140,7 +166,7 @@ import {BrowserWindow} from "electron";
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
-                        var bc= '    30';
+                        var bc= '   410';
                         var jydm = '11';
                         var yhdm = '3018';
                         var ywjym = randomNum(10000,99999);
@@ -150,7 +176,15 @@ import {BrowserWindow} from "electron";
                         // console.log(rightPad(1022,6))
                         var realJgzh = rightPad(_this.ruleForm.jgzh,30);
 
-                        var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh;
+                        var zxczy = rightPad(_this.ruleForm.zxczy,20)
+                        var lsh = randomNum(100000000,9999999999)
+                        var realLsh = rightPad(lsh,20)
+                        var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
+                        console.log(xzsj);
+                        var realxzsm = rightPad(_this.ruleForm.xzsm,200);
+
+                        var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
+                                         + zxczy + realLsh + xzsj + realxzsm;
                         console.log("请求字符串" + reqString);
                         var net = require('net');
                         var HOST = '118.24.52.46';
@@ -161,7 +195,7 @@ import {BrowserWindow} from "electron";
 
                             console.log('CONNECTED TO: ' + HOST + ':' + PORT);
                             // 建立连接后立即向服务器发送数据，服务器将收到这些数据
-                            client.write('Hello!');
+                            client.write(reqString);
 
                         });
 
