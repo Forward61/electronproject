@@ -1,9 +1,12 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <router-link id ="stateReq" to="/">监管状态告知</router-link>
+        <router-link id ="balanceReq" to="/balanceReq">余额查询</router-link>
+
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="交易名称" prop="name">
-            <el-form-item v-model="ruleForm.name" >银行冻结监管账户确认</el-form-item>
+            <el-form-item v-model="ruleForm.name" >余额查询</el-form-item>
 
         </el-form-item>
 
@@ -18,18 +21,21 @@ import {BrowserWindow} from "electron";
         <el-form-item label="中心操作员" prop="zxczy">
             <el-input  v-model="ruleForm.zxczy"></el-input>
         </el-form-item>
-<!--        <el-form-item label="流水号" prop="lsh">-->
-<!--            <el-input  v-model="ruleForm.lsh"></el-input>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="限制时间" prop="xzsj">-->
-<!--            <el-input  v-model="ruleForm.xzsj"></el-input>-->
-<!--        </el-form-item>-->
-        <el-form-item label="限制说明" prop="xzsm">
+
+        <el-form-item label="操作说明" prop="xzsm">
             <el-input  v-model="ruleForm.xzsm"></el-input>
         </el-form-item>
 
         <el-form-item label="返回" prop="desc">
             <el-input  v-model="ruleForm.desc"></el-input>
+        </el-form-item>
+
+        <el-form-item label="ip" prop="ip">
+            <el-input  v-model="ruleForm.ip"></el-input>
+        </el-form-item>
+
+        <el-form-item label="端口" prop="port">
+            <el-input  v-model="ruleForm.port"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
@@ -132,7 +138,9 @@ import {BrowserWindow} from "electron";
                     zxczy: '',
                     lsh:'',
                     xzsj: '',
-                    xzsm: ''
+                    xzsm: '',
+                    ip: '172.31.207.11',
+                    port: '46013'
                 },
                 rules: {
                     name: [
@@ -166,29 +174,30 @@ import {BrowserWindow} from "electron";
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
-                        var bc= '   410';
-                        var jydm = '11';
+                        var bc= '   360';
+                        var jydm = '17';
                         var yhdm = '3018';
                         var ywjym = randomNum(10000,99999);
                         console.log("业务校验码 ：" + ywjym);
                         var jmms = '10';
-                        var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,200);
+                        var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,100);
                         // console.log(rightPad(1022,6))
                         var realJgzh = rightPad(_this.ruleForm.jgzh,30);
 
                         var zxczy = rightPad(_this.ruleForm.zxczy,20)
-                        var lsh = randomNum(100000000,9999999999)
-                        var realLsh = rightPad(lsh,20)
-                        var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
-                        console.log(xzsj);
+                        // var lsh = randomNum(100000000,9999999999)
+                        // var realLsh = rightPad(lsh,20)
+                        // var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
+                        // console.log(xzsj);
                         var realxzsm = rightPad(_this.ruleForm.xzsm,200);
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
-                                         + zxczy + realLsh + xzsj + realxzsm;
-                        console.log("请求字符串" + reqString);
+                                         + zxczy  + realxzsm;
+                        console.log("请求字符串" )
+                        console.log(reqString);
                         var net = require('net');
-                        var HOST = '118.24.52.46';
-                        var PORT = 8081;
+                        var HOST = _this.ruleForm.ip;
+                        var PORT = _this.ruleForm.port;
 
                         var client = new net.Socket();
                         client.connect(PORT, HOST, function() {

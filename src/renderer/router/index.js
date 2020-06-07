@@ -13,6 +13,10 @@ export default new Router({
     {
       path: '*',
       redirect: '/'
+    },{
+      path:'/balanceReq',
+      name: 'balance-page',
+      component: require('@/components/BalancePage').default
     }
   ]
 })

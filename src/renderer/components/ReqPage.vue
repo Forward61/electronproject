@@ -1,9 +1,12 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <router-link id ="stateReq" to="/">监管状态告知</router-link>
+        <router-link id ="balanceReq" to="/balanceReq">余额查询</router-link>
+
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="交易名称" prop="name">
-            <el-form-item v-model="ruleForm.name" >银行冻结监管账户确认</el-form-item>
+            <el-form-item v-model="ruleForm.name" >监管状态告知</el-form-item>
 
         </el-form-item>
 
@@ -30,6 +33,14 @@ import {BrowserWindow} from "electron";
 
         <el-form-item label="返回" prop="desc">
             <el-input  v-model="ruleForm.desc"></el-input>
+        </el-form-item>
+
+        <el-form-item label="ip" prop="ip">
+            <el-input  v-model="ruleForm.ip"></el-input>
+        </el-form-item>
+
+        <el-form-item label="端口" prop="port">
+            <el-input  v-model="ruleForm.port"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
@@ -132,7 +143,9 @@ import {BrowserWindow} from "electron";
                     zxczy: '',
                     lsh:'',
                     xzsj: '',
-                    xzsm: ''
+                    xzsm: '',
+                    ip: '172.31.207.11',
+                    port: '46013'
                 },
                 rules: {
                     name: [
@@ -185,10 +198,11 @@ import {BrowserWindow} from "electron";
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
                                          + zxczy + realLsh + xzsj + realxzsm;
-                        console.log("请求字符串" + reqString);
+                        console.log("请求字符串" )
+                        console.log(reqString);
                         var net = require('net');
-                        var HOST = '118.24.52.46';
-                        var PORT = 8081;
+                        var HOST = _this.ruleForm.ip;
+                        var PORT = _this.ruleForm.port;
 
                         var client = new net.Socket();
                         client.connect(PORT, HOST, function() {
