@@ -8,7 +8,7 @@ export default new Router({
     {
       path: '/',
       name: 'landing-page',
-      component: require('@/components/ReqPage').default
+      component: require('@/components/LimitPage').default
     },
     {
       path: '*',

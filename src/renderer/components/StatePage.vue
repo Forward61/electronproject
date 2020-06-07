@@ -6,7 +6,7 @@ import {BrowserWindow} from "electron";
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="交易名称" prop="name">
-            <el-form-item v-model="ruleForm.name" >余额查询</el-form-item>
+            <el-form-item v-model="ruleForm.name" >监管状态告知</el-form-item>
 
         </el-form-item>
 
@@ -21,8 +21,13 @@ import {BrowserWindow} from "electron";
         <el-form-item label="中心操作员" prop="zxczy">
             <el-input  v-model="ruleForm.zxczy"></el-input>
         </el-form-item>
-
-        <el-form-item label="操作说明" prop="xzsm">
+<!--        <el-form-item label="流水号" prop="lsh">-->
+<!--            <el-input  v-model="ruleForm.lsh"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="限制时间" prop="xzsj">-->
+<!--            <el-input  v-model="ruleForm.xzsj"></el-input>-->
+<!--        </el-form-item>-->
+        <el-form-item label="限制说明" prop="xzsm">
             <el-input  v-model="ruleForm.xzsm"></el-input>
         </el-form-item>
 
@@ -174,25 +179,25 @@ import {BrowserWindow} from "electron";
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
-                        var bc= '   360';
-                        var jydm = '17';
+                        var bc= '   410';
+                        var jydm = '11';
                         var yhdm = '3018';
                         var ywjym = randomNum(10000,99999);
                         console.log("业务校验码 ：" + ywjym);
                         var jmms = '10';
-                        var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,100);
+                        var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,200);
                         // console.log(rightPad(1022,6))
                         var realJgzh = rightPad(_this.ruleForm.jgzh,30);
 
                         var zxczy = rightPad(_this.ruleForm.zxczy,20)
-                        // var lsh = randomNum(100000000,9999999999)
-                        // var realLsh = rightPad(lsh,20)
-                        // var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
-                        // console.log(xzsj);
+                        var lsh = randomNum(100000000,9999999999)
+                        var realLsh = rightPad(lsh,20)
+                        var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
+                        console.log(xzsj);
                         var realxzsm = rightPad(_this.ruleForm.xzsm,200);
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
-                                         + zxczy  + realxzsm;
+                                         + zxczy + realLsh + xzsj + realxzsm;
                         console.log("请求字符串" )
                         console.log(reqString);
                         var net = require('net');
