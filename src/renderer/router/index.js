@@ -17,6 +17,10 @@ export default new Router({
       path:'/balanceReq',
       name: 'balance-page',
       component: require('@/components/BalancePage').default
+    },{
+      path:'/stateReq',
+      name: 'balance-page',
+      component: require('@/components/StatePage').default
     }
   ]
 })

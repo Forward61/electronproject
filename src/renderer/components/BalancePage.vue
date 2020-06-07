@@ -1,8 +1,9 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
-        <router-link id ="stateReq" to="/">监管机构限制监管账户确认</router-link>
+        <router-link id ="limitReq" to="/">监管机构限制监管账户确认</router-link>
         <router-link id ="balanceReq" to="/balanceReq">余额查询</router-link>
+        <router-link id ="stateReq" to="/stateReq">监管状态告知</router-link>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="交易名称" prop="name">

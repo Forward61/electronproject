@@ -8,11 +8,19 @@ export default new Router({
     {
       path: '/',
       name: 'landing-page',
-      component: require('@/components/ReqPage').default
+      component: require('@/components/LimitPage').default
     },
     {
       path: '*',
       redirect: '/'
+    },{
+      path:'/balanceReq',
+      name: 'balance-page',
+      component: require('@/components/BalancePage').default
+    },{
+      path:'/stateReq',
+      name: 'balance-page',
+      component: require('@/components/StatePage').default
     }
   ]
 })
