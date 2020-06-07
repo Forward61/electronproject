@@ -42,7 +42,7 @@ import {BrowserWindow} from "electron";
             </el-radio-group>
         </el-form-item>
         <el-form-item label="活动形式" prop="desc">
-            <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+            <el-input  v-model="ruleForm.desc"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
@@ -52,6 +52,21 @@ import {BrowserWindow} from "electron";
     </div>
 </template>
 <script>
+    var jmz = {};
+    jmz.GetLength = function(str) {
+        ///<summary>获得字符串实际长度，中文2，英文1</summary>
+        ///<param name="str">要获得长度的字符串</param>
+        var realLength = 0, len = str.length, charCode = -1;
+        for (var i = 0; i < len; i++) {
+            charCode = str.charCodeAt(i);
+            if (charCode >= 0 && charCode <= 128)
+                realLength += 1;
+            else
+                realLength += 2;
+        }
+        return realLength;
+    };
+
     function createWindow () {
         /**
          * Initial window options
@@ -112,6 +127,11 @@ import {BrowserWindow} from "electron";
                 var _this = this;
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        console.log("字符串的长度 +" +jmz.GetLength(_this.ruleForm.name))
+
+
+
+
                         var net = require('net');
                         var HOST = '118.24.52.46';
                         var PORT = 8081;
@@ -128,8 +148,9 @@ import {BrowserWindow} from "electron";
 // 为客户端添加“data”事件处理函数
 // data是服务器发回的数据
                         client.on('data', function(data) {
-                            _this.ruleForm.desc = data;
-                            console.log('DATA: ' + data);
+                            var array = data.toString();
+                            _this.ruleForm.desc = array;
+                            // console.log('DATA: ' + data);
                             // 完全关闭连接
                             client.destroy();
                         });
@@ -137,7 +158,15 @@ import {BrowserWindow} from "electron";
 // 为客户端添加“close”事件处理函数
                         client.on('close', function() {
                             console.log('Connection closed');
-                        });                    } else {
+                        });
+//数据错误事件
+                        client.on('error',function(exception){
+                            console.log('服务端错误socket error:' + exception.toString());
+                            _this.ruleForm.desc = exception.toString();
+
+                            client.end();
+                        });
+                    } else {
                         console.log('error submit!!');
                         return false;
                     }

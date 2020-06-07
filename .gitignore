@@ -8,5 +8,6 @@ npm-debug.log
 npm-debug.log.*
 thumbs.db
 eletronproject-darwin-x64/*
+eletronproject-win32-x64/*
 
 !.gitkeep
