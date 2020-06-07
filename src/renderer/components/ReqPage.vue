@@ -2,18 +2,18 @@ import {BrowserWindow} from "electron";
 <template>
     <div>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="活动名称" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="交易名称" prop="name">
+            <el-form-item v-model="ruleForm.name" >银行冻结监管账户确认</el-form-item>
 
         </el-form-item>
 
-        <el-form-item label="交易代码" prop="jydm">
-            <el-input v-model="ruleForm.jydm"></el-input>
+        <el-form-item label="监管账户名称" prop="jgzhmc">
+            <el-input v-model="ruleForm.jgzhmc"></el-input>
         </el-form-item>
 
 
-        <el-form-item label="业务校验码" prop="ywjym">
-            <el-input  v-model="ruleForm.ywjym"></el-input>
+        <el-form-item label="监管账户" prop="jgzh">
+            <el-input  v-model="ruleForm.jgzh"></el-input>
         </el-form-item>
 
         <el-form-item label="返回" prop="desc">
@@ -104,19 +104,14 @@ import {BrowserWindow} from "electron";
                     desc: '',
                     // jydm: '',
                     // jydmLength: '2',
-                    yhdm: '3018',
-                    yhdm: '4',
-                    ywjym: '',
-                    ywjymLength: '6',
-                    jgzhhm: '',
-                    jgzhhmLength: '100',
+                    jgzhmc: '',
                     jgzh: '',
                     jgzhLength: '30'
                 },
                 rules: {
                     name: [
-                        { required: true, message: '请输入活动名称', trigger: 'blur' },
-                        { min: 0, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        { required: false, message: '银行冻结监管账户确认', trigger: 'blur' },
+                        { min: 0, max: 100, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                     ],
                     region: [
                         { required: false, message: '请选择活动区域', trigger: 'change' }
@@ -147,12 +142,16 @@ import {BrowserWindow} from "electron";
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
                         var bc= '    30';
                         var jydm = '11';
-                        _this.ruleForm.ywjym = randomNum(10000,99999);
-                        console.log("业务校验码 ：" + _this.ruleForm.ywjym);
+                        var yhdm = '3018';
+                        var ywjym = randomNum(10000,99999);
+                        console.log("业务校验码 ：" + ywjym);
                         var jmms = '10';
+                        var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,200);
+                        // console.log(rightPad(1022,6))
+                        var realJgzh = rightPad(_this.ruleForm.jgzh,30);
 
-                        console.log(rightPad(1022,6));
-
+                        var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh;
+                        console.log("请求字符串" + reqString);
                         var net = require('net');
                         var HOST = '118.24.52.46';
                         var PORT = 8081;
