@@ -20,6 +20,9 @@ import {BrowserWindow} from "electron";
         <el-form-item label="监管账户" prop="jgzh">
             <el-input  v-model="ruleForm.jgzh"></el-input>
         </el-form-item>
+		<el-form-item label="监管状态" prop="jgzt">
+            <el-input  v-model="ruleForm.jgzt"></el-input>
+        </el-form-item>
         <el-form-item label="中心操作员" prop="zxczy">
             <el-input  v-model="ruleForm.zxczy"></el-input>
         </el-form-item>
@@ -69,11 +72,16 @@ import {BrowserWindow} from "electron";
         return realLength;
     };
     function getRealLengthReqString(str,length) {
-        if (str.length > length){
+        if (str.length > length||getLength(str)>length){
             alert(str +"的值超长了！");
         }else
         {
+            var strlenth= getLength(str);
 
+            var addLenth = length - strlenth;
+            var addStr = ''.padEnd(addLenth, ' ')
+
+            return str + addStr
         }
 
     }
@@ -142,11 +150,12 @@ import {BrowserWindow} from "electron";
                     // jydmLength: '2',
                     jgzhmc: '',
                     jgzh: '',
+		            jgzt: '',
                     zxczy: '',
                     lsh:'',
                     xzsj: '',
                     xzsm: '',
-                    ip: '172.31.207.11',
+                    ip: '172.31.248.81',
                     port: '46013'
                 },
                 rules: {
@@ -181,25 +190,31 @@ import {BrowserWindow} from "electron";
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
-                        var bc= '   410';
+                        var bc= '   432';
                         var jydm = '15';
                         var yhdm = '3018';
-                        var ywjym = randomNum(10000,99999);
+                        var ywjym = randomNum(100000,999999);
                         console.log("业务校验码 ：" + ywjym);
                         var jmms = '10';
-                        var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,200);
+                        var realJgzhmc=getRealLengthReqString(_this.ruleForm.jgzhmc,100);
                         // console.log(rightPad(1022,6))
-                        var realJgzh = rightPad(_this.ruleForm.jgzh,30);
+                        var realJgzh = getRealLengthReqString(_this.ruleForm.jgzh,30);
 
-                        var zxczy = rightPad(_this.ruleForm.zxczy,20)
+						var jgxyh = formatDate(new Date().getTime(),'YYYYMMDDhhmmss')+randomNum(1000,9999);
+						console.log('监管协议号'+ jgxyh);
+						
+						var realJgzt = _this.ruleForm.jgzt;
+						
+						
+                        var zxczy = getRealLengthReqString(_this.ruleForm.zxczy,20)
                         var lsh = randomNum(100000000,9999999999)
-                        var realLsh = rightPad(lsh,20)
+                        var realLsh = getRealLengthReqString(lsh,20)
                         var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
                         console.log(xzsj);
-                        var realxzsm = rightPad(_this.ruleForm.xzsm,200);
+                        var realxzsm = getRealLengthReqString(_this.ruleForm.xzsm,200);
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
-                                         + zxczy + realLsh + xzsj + realxzsm;
+                                        +jgxyh+ realJgzt + zxczy + realLsh + xzsj + realxzsm;
                         console.log("请求字符串" )
                         console.log(reqString);
                         var net = require('net');

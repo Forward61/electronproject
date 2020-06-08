@@ -63,11 +63,16 @@ import {BrowserWindow} from "electron";
         return realLength;
     };
     function getRealLengthReqString(str,length) {
-        if (str.length > length){
+        if (str.length > length||getLength(str)>length){
             alert(str +"的值超长了！");
         }else
         {
+            var strlenth= getLength(str);
 
+            var addLenth = length - strlenth;
+            var addStr = ''.padEnd(addLenth, ' ')
+
+            return str + addStr
         }
 
     }
@@ -90,7 +95,15 @@ import {BrowserWindow} from "electron";
     //右填充空格
     function rightPad(str,length) {
         var templenth= getLength(str);
-        return str+ new Array(length-templenth).join(' ',  '') ;
+        var addLenth = length = templenth;
+        if(templenth <length){
+            console.log("需要加的长度" + addLenth);
+            return str+ new Array(length-templenth).join(' ',  '')+'' ;
+        }else
+        {
+            return str
+        }
+
     }
 
     //生成从minNum到maxNum的随机数
@@ -140,7 +153,7 @@ import {BrowserWindow} from "electron";
                     lsh:'',
                     xzsj: '',
                     xzsm: '',
-                    ip: '172.31.207.11',
+                    ip: '172.31.248.81',
                     port: '46013'
                 },
                 rules: {
@@ -175,25 +188,41 @@ import {BrowserWindow} from "electron";
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
-                        var bc= '   360';
+                        var bc= '   370';
                         var jydm = '17';
                         var yhdm = '3018';
-                        var ywjym = randomNum(10000,99999);
-                        console.log("业务校验码 ：" + ywjym);
-                        var jmms = '10';
-                        var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,100);
-                        // console.log(rightPad(1022,6))
-                        var realJgzh = rightPad(_this.ruleForm.jgzh,30);
+                        var ywjym = randomNum(100000,999999);
 
-                        var zxczy = rightPad(_this.ruleForm.zxczy,20)
+                        var jmms = '10';
+                        var realJgzhmc=getRealLengthReqString(_this.ruleForm.jgzhmc,100);
+
+                        var realJgzh = getRealLengthReqString(_this.ruleForm.jgzh,30);
+
+                        var zxczy = getRealLengthReqString(_this.ruleForm.zxczy,20)
                         // var lsh = randomNum(100000000,9999999999)
                         // var realLsh = rightPad(lsh,20)
                         // var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
                         // console.log(xzsj);
-                        var realxzsm = rightPad(_this.ruleForm.xzsm,200);
+                        var realxzsm =getRealLengthReqString( _this.ruleForm.xzsm,200);
+
+
+                        // var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,100);
+                        // // console.log(rightPad(1022,6))
+                        // var realJgzh = rightPad(_this.ruleForm.jgzh,30);
+                        //
+                        // var zxczy = rightPad(_this.ruleForm.zxczy,20)
+                        // // var lsh = randomNum(100000000,9999999999)
+                        // // var realLsh = rightPad(lsh,20)
+                        // // var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
+                        // // console.log(xzsj);
+                        // var realxzsm = rightPad(_this.ruleForm.xzsm,200);
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
                                          + zxczy  + realxzsm;
+                        console.log("realJgzhmc:" + realJgzhmc.length);
+                        console.log("realJgzh:" + realJgzh.length);
+                        console.log("zxczy:" + zxczy.length);
+                        console.log("realxzsm:" + realxzsm.length);
                         console.log("请求字符串" )
                         console.log(reqString);
                         var net = require('net');
