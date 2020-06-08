@@ -155,8 +155,8 @@ import {BrowserWindow} from "electron";
                     lsh:'',
                     xzsj: '',
                     xzsm: '',
-                    ip: '172.31.248.81',
-                    port: '46013'
+                    ip: '127.0.0.1',
+                    port: '8081'
                 },
                 rules: {
                     name: [
@@ -189,6 +189,7 @@ import {BrowserWindow} from "electron";
                 var _this = this;
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
                         var bc= '   432';
                         var jydm = '15';
@@ -217,18 +218,62 @@ import {BrowserWindow} from "electron";
                                         +jgxyh+ realJgzt + zxczy + realLsh + xzsj + realxzsm;
                         console.log("请求字符串" )
                         console.log(reqString);
+                        var encoding = require('encoding')
+
+                        var result = encoding.convert(reqString, "gbk");
+
+                        console.log("result :"+ result.toString()); //<Buffer d5 c4 d6 dc>
+
+                        var str ='/?中文=88';
+                        var strHHH = encoding.convert(str, "gbk");
+                        console.log(str + " " )
+                        console.log("转换后的"+ strHHH + strHHH.toString() + strHHH.toJSON())
+
+                        console.log("转后为utf8试下" + encoding.convert(strHHH,'utf8'))
+
+                        // 这里是utf8
+                        var str = '坑爹啊，都是国际项目了，编码居然还用gbk';
+                        console.log("坑爹utf8的长度" + new Buffer(str).length);
+
+// 转换成gbk
+                        var encoded = encoding.convert(str, 'gbk');
+                        console.log("坑爹gbk的长度" + new Buffer(encoded).length);
+                        console.log("坑爹的gbk的值" + encoded)
+
+                        var iconv = require('iconv-lite');
+
+                        var str1="搞定了锟斤拷";
+                        var rawStr = iconv.encode(str1, 'gbk').toString('binary');
+                        console.log("搞定了 :" +rawStr)
+
+
+                        var biz_content = "欢迎关注!";
+                        var reqString1 = iconv.encode(biz_content,'gbk');
+
+                        // res.setHeader('Content-Type', 'text/html; charset=gbk')
+                        // res.end(gbkBytes)
+
+
+
+
                         var net = require('net');
                         var HOST = _this.ruleForm.ip;
                         var PORT = _this.ruleForm.port;
 
+
                         var client = new net.Socket();
+                        client.setDefaultEncoding('utf8')
                         client.connect(PORT, HOST, function() {
 
                             console.log('CONNECTED TO: ' + HOST + ':' + PORT);
                             // 建立连接后立即向服务器发送数据，服务器将收到这些数据
-                            client.write(reqString);
+                            client.write(reqString1);
 
                         });
+
+
+
+
 
 // 为客户端添加“data”事件处理函数
 // data是服务器发回的数据
