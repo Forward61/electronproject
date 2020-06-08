@@ -155,8 +155,8 @@ import {BrowserWindow} from "electron";
                     lsh:'',
                     xzsj: '',
                     xzsm: '',
-                    ip: '127.0.0.1',
-                    port: '8081'
+                    ip: '172.31.249.81',
+                    port: '46013'
                 },
                 rules: {
                     name: [
@@ -194,61 +194,44 @@ import {BrowserWindow} from "electron";
                         var bc= '   432';
                         var jydm = '15';
                         var yhdm = '3018';
-                        var ywjym = randomNum(100000,999999);
+                        var ywjym = getRealLengthReqString(randomNum(100000,999999),6);
                         console.log("业务校验码 ：" + ywjym);
                         var jmms = '10';
                         var realJgzhmc=getRealLengthReqString(_this.ruleForm.jgzhmc,100);
                         // console.log(rightPad(1022,6))
                         var realJgzh = getRealLengthReqString(_this.ruleForm.jgzh,30);
 
-						var jgxyh = formatDate(new Date().getTime(),'YYYYMMDDhhmmss')+randomNum(1000,9999);
+						var jgxyh = formatDate(new Date().getTime(),'YYYYMMDDhhmmss')+randomNum(100000,999999);
 						console.log('监管协议号'+ jgxyh);
 						
-						var realJgzt = _this.ruleForm.jgzt;
-						
-						
+						var realJgzt = getRealLengthReqString(_this.ruleForm.jgzt,2);
+
                         var zxczy = getRealLengthReqString(_this.ruleForm.zxczy,20)
                         var lsh = randomNum(100000000,9999999999)
                         var realLsh = getRealLengthReqString(lsh,20)
-                        var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
+                        var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss') + ' ';
                         console.log(xzsj);
                         var realxzsm = getRealLengthReqString(_this.ruleForm.xzsm,200);
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
-                                        +jgxyh+ realJgzt + zxczy + realLsh + xzsj + realxzsm;
+                                        + jgxyh+ realJgzt + zxczy + realLsh + xzsj + realxzsm;
+
+
+                        console.log("原请求长度" + getLength(reqString))
+
                         console.log("请求字符串" )
                         console.log(reqString);
                         var encoding = require('encoding')
 
-                        var result = encoding.convert(reqString, "gbk");
-
-                        console.log("result :"+ result.toString()); //<Buffer d5 c4 d6 dc>
-
-                        var str ='/?中文=88';
-                        var strHHH = encoding.convert(str, "gbk");
-                        console.log(str + " " )
-                        console.log("转换后的"+ strHHH + strHHH.toString() + strHHH.toJSON())
-
-                        console.log("转后为utf8试下" + encoding.convert(strHHH,'utf8'))
-
-                        // 这里是utf8
-                        var str = '坑爹啊，都是国际项目了，编码居然还用gbk';
-                        console.log("坑爹utf8的长度" + new Buffer(str).length);
-
-// 转换成gbk
-                        var encoded = encoding.convert(str, 'gbk');
-                        console.log("坑爹gbk的长度" + new Buffer(encoded).length);
-                        console.log("坑爹的gbk的值" + encoded)
-
-                        var iconv = require('iconv-lite');
-
-                        var str1="搞定了锟斤拷";
-                        var rawStr = iconv.encode(str1, 'gbk').toString('binary');
-                        console.log("搞定了 :" +rawStr)
+                        var realReq = encoding.convert(reqString, "gbk");
 
 
-                        var biz_content = "欢迎关注!";
-                        var reqString1 = iconv.encode(biz_content,'gbk');
+
+                        // var iconv = require('iconv-lite');
+
+
+
+                        // var iconvreqString = iconv.encode(reqString,'gbk');
 
                         // res.setHeader('Content-Type', 'text/html; charset=gbk')
                         // res.end(gbkBytes)
@@ -267,7 +250,10 @@ import {BrowserWindow} from "electron";
 
                             console.log('CONNECTED TO: ' + HOST + ':' + PORT);
                             // 建立连接后立即向服务器发送数据，服务器将收到这些数据
-                            client.write(reqString1);
+                            // client.write(iconvreqString);
+                            client.write(realReq);
+                            console.log("转换后请求长度" + getLength(result))
+
 
                         });
 

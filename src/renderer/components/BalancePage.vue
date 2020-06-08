@@ -153,7 +153,7 @@ import {BrowserWindow} from "electron";
                     lsh:'',
                     xzsj: '',
                     xzsm: '',
-                    ip: '172.31.248.81',
+                    ip: '172.31.249.81',
                     port: '46013'
                 },
                 rules: {
@@ -191,7 +191,7 @@ import {BrowserWindow} from "electron";
                         var bc= '   370';
                         var jydm = '17';
                         var yhdm = '3018';
-                        var ywjym = randomNum(100000,999999);
+                        var ywjym = getRealLengthReqString(randomNum(100000,999999),6);
 
                         var jmms = '10';
                         var realJgzhmc=getRealLengthReqString(_this.ruleForm.jgzhmc,100);
@@ -225,6 +225,13 @@ import {BrowserWindow} from "electron";
                         console.log("realxzsm:" + realxzsm.length);
                         console.log("请求字符串" )
                         console.log(reqString);
+
+                        var encoding = require('encoding')
+
+                        var realReq = encoding.convert(reqString, "gbk");
+
+
+
                         var net = require('net');
                         var HOST = _this.ruleForm.ip;
                         var PORT = _this.ruleForm.port;
@@ -234,7 +241,7 @@ import {BrowserWindow} from "electron";
 
                             console.log('CONNECTED TO: ' + HOST + ':' + PORT);
                             // 建立连接后立即向服务器发送数据，服务器将收到这些数据
-                            client.write(reqString);
+                            client.write(realReq);
 
                         });
 
