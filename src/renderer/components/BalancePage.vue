@@ -153,8 +153,8 @@ import {BrowserWindow} from "electron";
                     lsh:'',
                     xzsj: '',
                     xzsm: '',
-                    ip: '172.31.249.81',
-                    port: '46013'
+                    ip: '127.0.0.1',
+                    port: '8081'
                 },
                 rules: {
                     name: [
@@ -185,6 +185,7 @@ import {BrowserWindow} from "electron";
         methods: {
             submitForm(formName) {
                 var _this = this;
+                var encoding = require('encoding')
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
@@ -219,14 +220,11 @@ import {BrowserWindow} from "electron";
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
                                          + zxczy  + realxzsm;
-                        console.log("realJgzhmc:" + realJgzhmc.length);
-                        console.log("realJgzh:" + realJgzh.length);
-                        console.log("zxczy:" + zxczy.length);
-                        console.log("realxzsm:" + realxzsm.length);
+
                         console.log("请求字符串" )
                         console.log(reqString);
 
-                        var encoding = require('encoding')
+                        // var encoding = require('encoding')
 
                         var realReq = encoding.convert(reqString, "gbk");
 
@@ -250,6 +248,8 @@ import {BrowserWindow} from "electron";
                         client.on('data', function(data) {
                             var array = data.toString();
                             _this.ruleForm.desc = array;
+                            console.log('utf8' + encoding.convert(array,'utf8'))
+                            console.log('gbk' + encoding.convert(array,'utf8'))
                             // console.log('DATA: ' + data);
                             // 完全关闭连接
                             client.destroy();

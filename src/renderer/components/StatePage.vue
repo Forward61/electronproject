@@ -252,7 +252,7 @@ import {BrowserWindow} from "electron";
                             // 建立连接后立即向服务器发送数据，服务器将收到这些数据
                             // client.write(iconvreqString);
                             client.write(realReq);
-                            console.log("转换后请求长度" + getLength(result))
+                            // console.log("转换后请求长度" + getLength(result))
 
 
                         });
