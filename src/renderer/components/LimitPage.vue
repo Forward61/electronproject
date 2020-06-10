@@ -227,8 +227,11 @@ import {BrowserWindow} from "electron";
 // 为客户端添加“data”事件处理函数
 // data是服务器发回的数据
                         client.on('data', function(data) {
-                            var array = data.toString();
-                            _this.ruleForm.desc = array;
+                            var iconv = require('iconv-lite')
+                            var decodeResData =  iconv.decode(new Buffer(data), 'gbk');
+                            console.log("返回信息：")
+                            console.log(decodeResData)
+                            _this.ruleForm.desc = decodeResData;
                             // console.log('DATA: ' + data);
                             // 完全关闭连接
                             client.destroy();

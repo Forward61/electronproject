@@ -131,7 +131,51 @@ import {BrowserWindow} from "electron";
         return newTime;
     }
 
-            export default {
+
+    function Uint8ArrayToString(fileData) {
+        var dataString = "";
+        for (var i = 0; i < fileData.length; i++) {
+            dataString += String.fromCharCode(fileData[i]);
+        }
+
+        return dataString
+
+    }
+    function Utf8ArrayToStr(array) {
+        var out, i, len, c;
+        var char2, char3;
+
+        out = "";
+        len = array.length;
+        i = 0;
+        while(i < len) {
+            c = array[i++];
+            switch(c >> 4)
+            {
+                case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+// 0xxxxxxx
+                out += String.fromCharCode(c);
+                break;
+                case 12: case 13:
+// 110x xxxx 10xx xxxx
+                char2 = array[i++];
+                out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+                break;
+                case 14:
+// 1110 xxxx 10xx xxxx 10xx xxxx
+                    char2 = array[i++];
+                    char3 = array[i++];
+                    out += String.fromCharCode(((c & 0x0F) << 12) |
+                        ((char2 & 0x3F) << 6) |
+                        ((char3 & 0x3F) << 0));
+                    break;
+            }
+        }
+
+        return out;
+    }
+
+    export default {
         data() {
             return {
                 str: '',
@@ -153,8 +197,8 @@ import {BrowserWindow} from "electron";
                     lsh:'',
                     xzsj: '',
                     xzsm: '',
-                    ip: '127.0.0.1',
-                    port: '8081'
+                    ip: '172.31.249.81',
+                    port: '46013'
                 },
                 rules: {
                     name: [
@@ -246,10 +290,20 @@ import {BrowserWindow} from "electron";
 // 为客户端添加“data”事件处理函数
 // data是服务器发回的数据
                         client.on('data', function(data) {
-                            var array = data.toString();
-                            _this.ruleForm.desc = array;
-                            console.log('utf8' + encoding.convert(array,'utf8'))
-                            console.log('gbk' + encoding.convert(array,'utf8'))
+                            var iconv = require('iconv-lite')
+                            var decodeResData =  iconv.decode(new Buffer(data), 'gbk');
+                            console.log("返回信息：")
+                            console.log(decodeResData)
+                            _this.ruleForm.desc = decodeResData;
+
+                            // console.log("哈哈"  + decodeHtmlData)
+                            // console.log(data)
+                            // console.log(Utf8ArrayToStr(data))
+                            // console.log(Uint8ArrayToString(data))
+                            // var array = data.toString();
+                            // _this.ruleForm.desc = decodeResData;
+                            // console.log('utf8' + encoding.convert(data,'utf8'))
+                            // console.log('gbk' + encoding.convert(data,'gbk'))
                             // console.log('DATA: ' + data);
                             // 完全关闭连接
                             client.destroy();
