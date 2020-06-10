@@ -167,6 +167,9 @@ import {BrowserWindow} from "electron";
                     region: [
                         { required: false, message: '请选择活动区域', trigger: 'change' }
                     ],
+                    jgzh: [
+                        { required: true, message: '请输入监管账户', trigger: 'change' }
+                    ],
                     // date1: [
                     //     { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
                     // ],
