@@ -8,7 +8,7 @@ import {BrowserWindow} from "electron";
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="交易名称" prop="name">
-            <el-form-item v-model="ruleForm.name" >监管机构限制监管账户确认</el-form-item>
+            <el-form-item v-model="ruleForm.name" >监管机构解除监管账户限制确认</el-form-item>
 
         </el-form-item>
 
@@ -187,7 +187,7 @@ import {BrowserWindow} from "electron";
                     if (valid) {
                         // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
                         var bc= '   410';
-                        var jydm = '13';
+                        var jydm = '14';
                         var yhdm = '3018';
                         var ywjym = getRealLengthReqString(randomNum(100000,999999),6);
                         console.log("业务校验码 ：" + ywjym);

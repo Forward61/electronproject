@@ -1,9 +1,10 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
-        <router-link id ="limitReq" to="/">监管机构限制监管账户确认</router-link>
-        <router-link id ="balanceReq" to="/balanceReq">余额查询</router-link>
-        <router-link id ="stateReq" to="/stateReq">监管状态告知</router-link>
+        <el-button type="primary" disabled><router-link id ="limitReq" to="/">监管机构限制监管账户确认</router-link></el-button>
+        <el-button type="success" disabled><router-link id ="balanceReq" to="/balanceReq">余额查询</router-link></el-button>
+        <el-button type="primary" disabled><router-link id ="stateReq" to="/stateReq">监管状态告知</router-link></el-button>
+        <el-button type="success" disabled><router-link id ="unfreezeReq" to="/unfreezeReq">监管机构解除监管账户限制确认</router-link></el-button>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="交易名称" prop="name">
@@ -207,7 +208,7 @@ import {BrowserWindow} from "electron";
 						var realJgzt = getRealLengthReqString(_this.ruleForm.jgzt,2);
 
                         var zxczy = getRealLengthReqString(_this.ruleForm.zxczy,20)
-                        var lsh = randomNum(100000000,9999999999)
+                        var lsh = formatDate(new Date().getTime(),'YYYYMMDDhhmmss')+randomNum(100000,999999);
                         var realLsh = getRealLengthReqString(lsh,20)
                         var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss') + ' ';
                         console.log(xzsj);

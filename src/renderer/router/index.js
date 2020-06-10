@@ -21,6 +21,10 @@ export default new Router({
       path:'/stateReq',
       name: 'balance-page',
       component: require('@/components/StatePage').default
+    },{
+      path:'/unfreezeReq',
+      name: 'balance-page',
+      component: require('@/components/UnfreezePage').default
     }
   ]
 })
