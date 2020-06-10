@@ -11,6 +11,7 @@ eletronproject-darwin-x64/*
 eletronproject-win32-x64/*
 eletronproject-win32-ia32/*
 eletronproject-*-*.*
+eletronproject-*-*.*/*
 *.zip
 
 !.gitkeep
