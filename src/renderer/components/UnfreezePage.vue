@@ -45,8 +45,12 @@ import {BrowserWindow} from "electron";
             <el-input  v-model="ruleForm.port"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+
+        <el-form-item label="发送的报文" prop="fsbw">
+            <el-input  v-model="ruleForm.fsbw"></el-input>
         </el-form-item>
     </el-form>
     </div>
@@ -93,7 +97,7 @@ import {BrowserWindow} from "electron";
         })
 
         mainWindow.loadURL("index.html")
-        mainWindow.webContents.openDevTools()
+        // mainWindow.webContents.openDevTools()
         mainWindow.on('closed', () => {
             mainWindow = null
         })
@@ -152,7 +156,8 @@ import {BrowserWindow} from "electron";
                     xzsj: '',
                     xzsm: '',
                     ip: '172.31.249.81',
-                    port: '46013'
+                    port: '46013',
+                    fsbw: ''
                 },
                 rules: {
                     name: [
@@ -208,6 +213,7 @@ import {BrowserWindow} from "electron";
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
                                          + zxczy + realLsh + realXzsj + realxzsm;
+                        _this.ruleForm.fsbw = reqString;
                         console.log("请求字符串" )
                         console.log(reqString);
 
