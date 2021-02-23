@@ -3,23 +3,28 @@ import {BrowserWindow} from "electron";
     <div>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="交易名称" prop="name">
-            <el-form-item v-model="ruleForm.name" >Tcp</el-form-item>
+<!--        <el-form-item label="交易名称" prop="name">-->
+<!--            <el-form-item v-model="ruleForm.name" >Tcp</el-form-item>-->
 
-        </el-form-item>
+<!--        </el-form-item>-->
 
 
 
-        <el-form-item label="发送报文" prop="reqText">
+        <el-form-item label="发送报文" prop="reqText" >
             <el-input  v-model="ruleForm.reqText"></el-input>
         </el-form-item>
-
+        <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+        <el-form-item label="返回不含头" prop="resXmlText" class="bg-success" >
+            <el-input type="textarea" autosize
+                      v-model="ruleForm.resXmlText" ></el-input>
+        </el-form-item>
         <el-form-item label="服务器返回" prop="resText" class="bg-success" >
             <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
         </el-form-item>
-        <el-form-item label="返回不含头" prop="resXmlText" class="bg-success" >
-            <el-input  v-model="ruleForm.resXmlText" ></el-input>
-        </el-form-item>
+
 
         <el-form-item label="ip" prop="ip">
             <el-select v-model="ruleForm.ip" placeholder="请选择">
@@ -35,10 +40,7 @@ import {BrowserWindow} from "electron";
         <el-form-item label="端口" prop="port">
             <el-input  v-model="ruleForm.port"></el-input>
         </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
+
         <el-form-item label="发送的报文" prop="fsbw">
             <el-input  v-model="ruleForm.fsbw"></el-input>
         </el-form-item>
@@ -46,6 +48,88 @@ import {BrowserWindow} from "electron";
     </div>
 </template>
 <script>
+    function showXml(str){
+        var text = str
+
+        //去掉多余的空格
+        text = '\n' + text.replace(/(<\w+)(\s.*?>)/g,function($0, name, props)
+        {
+            return name + ' ' + props.replace(/\s+(\w+=)/g," $1");
+        }).replace(/>\s*?</g,">\n<");
+
+        //把注释编码
+        text = text.replace(/\n/g,'\r').replace(/<!--(.+?)-->/g,function($0, text)
+        {
+            var ret = '<!--' + escape(text) + '-->';
+            return ret;
+        }).replace(/\r/g,'\n');
+
+        //调整格式
+        var rgx = /\n(<(([^\?]).+?)(?:\s|\s*?>|\s*?(\/)>)(?:.*?(?:(?:(\/)>)|(?:<(\/)\2>)))?)/mg;
+        var nodeStack = [];
+        var output = text.replace(rgx,function($0,all,name,isBegin,isCloseFull1,isCloseFull2 ,isFull1,isFull2){
+            var isClosed = (isCloseFull1 == '/') || (isCloseFull2 == '/' ) || (isFull1 == '/') || (isFull2 == '/');
+            var prefix = '';
+            if(isBegin == '!')
+            {
+                prefix = getPrefix(nodeStack.length);
+            }
+            else
+            {
+                if(isBegin != '/')
+                {
+                    prefix = getPrefix(nodeStack.length);
+                    if(!isClosed)
+                    {
+                        nodeStack.push(name);
+                    }
+                }
+                else
+                {
+                    nodeStack.pop();
+                    prefix = getPrefix(nodeStack.length);
+                }
+
+            }
+            var ret =  '\n' + prefix + all;
+            return ret;
+        });
+
+        var prefixSpace = -1;
+        var outputText = output.substring(1);
+
+        //把注释还原并解码，调格式
+        outputText = outputText.replace(/\n/g,'\r').replace(/(\s*)<!--(.+?)-->/g,function($0, prefix,  text)
+        {
+            if(prefix.charAt(0) == '\r')
+                prefix = prefix.substring(1);
+            text = unescape(text).replace(/\r/g,'\n');
+            var ret = '\n' + prefix + '<!--' + text.replace(/^\s*/mg, prefix ) + '-->';
+            return ret;
+        });
+        //alert(outputText);
+
+        outputText=	outputText.replace(/\s+$/g,'').replace(/\r/g,'\r\n');
+
+
+        return outputText
+
+
+    }
+
+    function getPrefix(prefixIndex)
+    {
+        var span = '    ';
+        var output = [];
+        for(var i = 0 ; i < prefixIndex; ++i)
+        {
+            output.push(span);
+        }
+
+        return output.join('');
+    }
+
+
     function getLength(str) {
         ///<summary>获得字符串实际长度，中文2，英文1</summary>
         ///<param name="str">要获得长度的字符串</param>
@@ -278,7 +362,8 @@ import {BrowserWindow} from "electron";
                             console.log("返回信息：")
                             console.log(decodeResData)
                             _this.ruleForm.resText = decodeResData;
-                            _this.ruleForm.resXmlText = decodeResData.toString().slice(8);
+                            var resXmlTextString = decodeResData.toString().slice(8);
+                            _this.ruleForm.resXmlText =showXml(resXmlTextString);
                             // 完全关闭连接
                             client.destroy();
                         });
