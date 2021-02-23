@@ -7,6 +7,11 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'tcpclient-page',
+      component: require('@/components/TcpClient').default
+    },
+    {
+      path: '/landing-page',
       name: 'landing-page',
       component: require('@/components/LimitPage').default
     },

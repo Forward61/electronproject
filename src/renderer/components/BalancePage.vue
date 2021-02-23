@@ -222,7 +222,7 @@ import {BrowserWindow} from "electron";
                         label: 'UAT环境-207.12'
                     }, {
                         value: '172.31.207.13',
-                        label: 'ZSC环境-207.12'
+                        label: 'ZSC环境-207.13'
                     }]
                 },
                 rules: {
