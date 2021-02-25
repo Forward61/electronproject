@@ -1,30 +1,36 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
+        <el-button type="primary" disabled><router-link id ="limitReq" to="/">监管机构限制监管账户确认</router-link></el-button>
+        <el-button type="success" disabled><router-link id ="balanceReq" to="/balanceReq">余额查询</router-link></el-button>
+        <el-button type="primary" disabled><router-link id ="stateReq" to="/stateReq">监管状态告知</router-link></el-button>
+        <el-button type="success" disabled><router-link id ="unfreezeReq" to="/unfreezeReq">监管机构解除监管账户限制确认</router-link></el-button>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-<!--        <el-form-item label="交易名称" prop="name">-->
-<!--            <el-form-item v-model="ruleForm.name" >Tcp</el-form-item>-->
+        <el-form-item label="交易名称" prop="name">
+            <el-form-item v-model="ruleForm.name" >余额查询</el-form-item>
 
-<!--        </el-form-item>-->
-
-
-
-        <el-form-item label="发送报文" prop="reqText" >
-            <el-input  v-model="ruleForm.reqText"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-        <el-form-item label="返回不含头" prop="resXmlText" class="bg-success" >
-            <el-input type="textarea" autosize
-                      v-model="ruleForm.resXmlText" ></el-input>
-        </el-form-item>
-        <el-form-item label="服务器返回" prop="resText" class="bg-success" >
-            <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
         </el-form-item>
 
+        <el-form-item label="监管账户名称" prop="jgzhmc">
+            <el-input v-model="ruleForm.jgzhmc"></el-input>
+        </el-form-item>
+
+
+        <el-form-item label="监管账户" prop="jgzh">
+            <el-input  v-model="ruleForm.jgzh"></el-input>
+        </el-form-item>
+        <el-form-item label="中心操作员" prop="zxczy">
+            <el-input  v-model="ruleForm.zxczy"></el-input>
+        </el-form-item>
+
+        <el-form-item label="操作说明" prop="xzsm">
+            <el-input  v-model="ruleForm.xzsm"></el-input>
+        </el-form-item>
+
+        <el-form-item label="服务器返回" prop="desc" class="bg-success" >
+            <el-input  v-model="ruleForm.desc" :disabled=true></el-input>
+        </el-form-item>
 
         <el-form-item label="ip" prop="ip">
             <el-select v-model="ruleForm.ip" placeholder="请选择">
@@ -40,7 +46,10 @@ import {BrowserWindow} from "electron";
         <el-form-item label="端口" prop="port">
             <el-input  v-model="ruleForm.port"></el-input>
         </el-form-item>
-
+        <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
         <el-form-item label="发送的报文" prop="fsbw">
             <el-input  v-model="ruleForm.fsbw"></el-input>
         </el-form-item>
@@ -48,88 +57,6 @@ import {BrowserWindow} from "electron";
     </div>
 </template>
 <script>
-    function showXml(str){
-        var text = str
-
-        //去掉多余的空格
-        text = '\n' + text.replace(/(<\w+)(\s.*?>)/g,function($0, name, props)
-        {
-            return name + ' ' + props.replace(/\s+(\w+=)/g," $1");
-        }).replace(/>\s*?</g,">\n<");
-
-        //把注释编码
-        text = text.replace(/\n/g,'\r').replace(/<!--(.+?)-->/g,function($0, text)
-        {
-            var ret = '<!--' + escape(text) + '-->';
-            return ret;
-        }).replace(/\r/g,'\n');
-
-        //调整格式
-        var rgx = /\n(<(([^\?]).+?)(?:\s|\s*?>|\s*?(\/)>)(?:.*?(?:(?:(\/)>)|(?:<(\/)\2>)))?)/mg;
-        var nodeStack = [];
-        var output = text.replace(rgx,function($0,all,name,isBegin,isCloseFull1,isCloseFull2 ,isFull1,isFull2){
-            var isClosed = (isCloseFull1 == '/') || (isCloseFull2 == '/' ) || (isFull1 == '/') || (isFull2 == '/');
-            var prefix = '';
-            if(isBegin == '!')
-            {
-                prefix = getPrefix(nodeStack.length);
-            }
-            else
-            {
-                if(isBegin != '/')
-                {
-                    prefix = getPrefix(nodeStack.length);
-                    if(!isClosed)
-                    {
-                        nodeStack.push(name);
-                    }
-                }
-                else
-                {
-                    nodeStack.pop();
-                    prefix = getPrefix(nodeStack.length);
-                }
-
-            }
-            var ret =  '\n' + prefix + all;
-            return ret;
-        });
-
-        var prefixSpace = -1;
-        var outputText = output.substring(1);
-
-        //把注释还原并解码，调格式
-        outputText = outputText.replace(/\n/g,'\r').replace(/(\s*)<!--(.+?)-->/g,function($0, prefix,  text)
-        {
-            if(prefix.charAt(0) == '\r')
-                prefix = prefix.substring(1);
-            text = unescape(text).replace(/\r/g,'\n');
-            var ret = '\n' + prefix + '<!--' + text.replace(/^\s*/mg, prefix ) + '-->';
-            return ret;
-        });
-        //alert(outputText);
-
-        outputText=	outputText.replace(/\s+$/g,'').replace(/\r/g,'\r\n');
-
-
-        return outputText
-
-
-    }
-
-    function getPrefix(prefixIndex)
-    {
-        var span = '    ';
-        var output = [];
-        for(var i = 0 ; i < prefixIndex; ++i)
-        {
-            output.push(span);
-        }
-
-        return output.join('');
-    }
-
-
     function getLength(str) {
         ///<summary>获得字符串实际长度，中文2，英文1</summary>
         ///<param name="str">要获得长度的字符串</param>
@@ -154,9 +81,9 @@ import {BrowserWindow} from "electron";
             var strlenth= getLength(str);
 
             var addLenth = length - strlenth;
-            //左填充 0
-            var addStr = ''.padEnd(addLenth, '0')
-            return addStr + str ;
+            var addStr = ''.padEnd(addLenth, ' ')
+
+            return str + addStr
         }
 
     }
@@ -275,45 +202,56 @@ import {BrowserWindow} from "electron";
                     desc: '',
                     // jydm: '',
                     // jydmLength: '2',
-                    reqText: '',
-                    resText: '',
+                    jgzhmc: '',
+                    jgzh: '',
+                    zxczy: '',
                     lsh:'',
-
-                    ip: '172.31.210.18',
-                    port: '14015',
+                    xzsj: '',
+                    xzsm: '',
+                    ip: '172.31.207.11',
+                    port: '46013',
                     fsbw: '',
-                    resXmlText: '',
                     options: [{
-                            value: '172.31.210.18',
-                            label: '开发环境-172.31.210.18'
+                        value: '172.31.207.10',
+                        label: '开发环境-172.31.207.10'
                     }, {
-                        value: '172.31.210.19',
-                        label: 'SIT环境-210.19'
+                        value: '172.31.207.11',
+                        label: 'SIT环境-207.11'
                     }, {
-                        value: '172.31.210.20',
-                        label: 'UAT环境-210.20'
+                        value: '172.31.207.12',
+                        label: 'UAT环境-207.12'
                     }, {
-                        value: '172.31.210.21',
-                        label: 'ZSC环境-210.21'
-                    },
-                    {
-                        value: '127.0.0.1',
-                        label: '本地-127.0.0.1'
-
+                        value: '172.31.207.13',
+                        label: 'ZSC环境-207.13'
                     }]
                 },
                 rules: {
-                    reqText: [
-                        { required: true, message: '发送报文不能为空', trigger: 'blur' }
-
+                    name: [
+                        { required: false, message: '银行冻结监管账户确认', trigger: 'blur' },
+                        { min: 0, max: 100, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                     ],
+                    region: [
+                        { required: false, message: '请选择活动区域', trigger: 'change' }
+                    ],
+                    jgzh: [
+                        { required: true, message: '请输入监管账户', trigger: 'change' }
+                    ],
+
+                    // date1: [
+                    //     { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                    // ],
+                    // date2: [
+                    //     { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+                    // ],
+                    // type: [
+                    //     { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+                    // ],
                     resource: [
                         { required: false, message: '请选择活动资源', trigger: 'change' }
+                    ],
+                    desc: [
+                        { required: false, message: '请填写活动形式', trigger: 'blur' }
                     ]
-                    // ,
-                    // desc: [
-                    //     { required: false, message: '请填写活动形式', trigger: 'blur' }
-                    // ]
                 }
             };
         },
@@ -323,16 +261,38 @@ import {BrowserWindow} from "electron";
                 var encoding = require('encoding')
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        //验证表单后把返回结果清空，避免超时或者其他返回内容未清空造成使用者误解。
-                        _this.ruleForm.resText = '';
-                        _this.ruleForm.resXmlText = '';
-                        var realReqTextLengths =getLength( _this.ruleForm.reqText);
-                        var reqHead = getRealLengthReqString(realReqTextLengths, 8);
-                        console.log("reqHeade的值：" + reqHead);
+                        // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
+                        var bc= '   370';
+                        var jydm = '17';
+                        var yhdm = '3018';
+                        var ywjym = getRealLengthReqString(randomNum(100000,999999),6);
+
+                        var jmms = '10';
+                        var realJgzhmc=getRealLengthReqString(_this.ruleForm.jgzhmc,100);
+
+                        var realJgzh = getRealLengthReqString(_this.ruleForm.jgzh,30);
+
+                        var zxczy = getRealLengthReqString(_this.ruleForm.zxczy,20)
+                        // var lsh = randomNum(100000000,9999999999)
+                        // var realLsh = rightPad(lsh,20)
+                        // var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
+                        // console.log(xzsj);
+                        var realxzsm =getRealLengthReqString( _this.ruleForm.xzsm,200);
 
 
+                        // var realJgzhmc=rightPad(_this.ruleForm.jgzhmc,100);
+                        // // console.log(rightPad(1022,6))
+                        // var realJgzh = rightPad(_this.ruleForm.jgzh,30);
+                        //
+                        // var zxczy = rightPad(_this.ruleForm.zxczy,20)
+                        // // var lsh = randomNum(100000000,9999999999)
+                        // // var realLsh = rightPad(lsh,20)
+                        // // var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
+                        // // console.log(xzsj);
+                        // var realxzsm = rightPad(_this.ruleForm.xzsm,200);
 
-                        var reqString = reqHead + _this.ruleForm.reqText;
+                        var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
+                                         + zxczy  + realxzsm;
                         _this.ruleForm.fsbw = reqString;
                         console.log("请求字符串" )
                         console.log(reqString);
@@ -360,12 +320,11 @@ import {BrowserWindow} from "electron";
 // data是服务器发回的数据
                         client.on('data', function(data) {
                             var iconv = require('iconv-lite')
-                            var decodeResData =  iconv.decode(new Buffer(data), 'utf-8');
+                            var decodeResData =  iconv.decode(new Buffer(data), 'gbk');
                             console.log("返回信息：")
                             console.log(decodeResData)
-                            _this.ruleForm.resText = decodeResData;
-                            var resXmlTextString = decodeResData.toString().slice(8);
-                            _this.ruleForm.resXmlText =showXml(resXmlTextString);
+                            _this.ruleForm.desc = decodeResData;
+
                             // 完全关闭连接
                             client.destroy();
                         });
@@ -377,8 +336,7 @@ import {BrowserWindow} from "electron";
 //数据错误事件
                         client.on('error',function(exception){
                             console.log('服务端错误socket error:' + exception.toString());
-                            _this.ruleForm.resText = exception.toString();
-                            // _this.ruleForm.resXmlText = exception.toString().slice(3);
+                            _this.ruleForm.desc = exception.toString();
 
                             client.end();
                         });
