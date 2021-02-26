@@ -131,7 +131,8 @@ import {BrowserWindow} from "electron";
 
 
     function getLength(str) {
-        ///<summary>获得字符串实际长度，中文2，英文1</summary>
+         // UTF-8格式占3个，gbk，占用2个
+        ///<summary>获得字符串实际长度，中文3，英文1</summary>
         ///<param name="str">要获得长度的字符串</param>
         var str=str+'';
         var realLength = 0;
@@ -142,7 +143,7 @@ import {BrowserWindow} from "electron";
             if (charCode >= 0 && charCode <= 128)
                 realLength += 1;
             else
-                realLength += 2;
+                realLength += 3;
         }
         return realLength;
     };
@@ -326,20 +327,24 @@ import {BrowserWindow} from "electron";
                         //验证表单后把返回结果清空，避免超时或者其他返回内容未清空造成使用者误解。
                         _this.ruleForm.resText = '';
                         _this.ruleForm.resXmlText = '';
-                        var realReqTextLengths =getLength( _this.ruleForm.reqText);
+                        var reqtxt2utf8 = encoding.convert(_this.ruleForm.reqText, "utf-8");
+                        var realReqTextLengths =getLength(_this.ruleForm.reqText);
+                        console.log("realReqTextLengths" +realReqTextLengths);
+                        var realReqUtf8TextLengths = getLength(reqtxt2utf8);
+                        console.log("realReqUtf8TextLengths" +realReqUtf8TextLengths);
+
                         var reqHead = getRealLengthReqString(realReqTextLengths, 8);
                         console.log("reqHeade的值：" + reqHead);
 
 
 
-                        var reqString = reqHead + _this.ruleForm.reqText;
+                        var reqString = reqHead + reqtxt2utf8;
                         _this.ruleForm.fsbw = reqString;
                         console.log("请求字符串" )
                         console.log(reqString);
 
-                        // var encoding = require('encoding')
 
-                        var realReq = encoding.convert(reqString, "gbk");
+                        var realReq = reqString;
 
 
 
