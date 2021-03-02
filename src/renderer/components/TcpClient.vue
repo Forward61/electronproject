@@ -17,7 +17,7 @@ import {BrowserWindow} from "electron";
             <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
-        <el-form-item label="返回不含头" prop="resXmlText" class="bg-success" >
+        <el-form-item label="返回不含头" prop="resXmlText" class="" >
             <el-input type="textarea" autosize
                       v-model="ruleForm.resXmlText" ></el-input>
         </el-form-item>
@@ -25,24 +25,33 @@ import {BrowserWindow} from "electron";
             <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
         </el-form-item>
 
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="ip" prop="ip">
+                    <el-select v-model="ruleForm.ip" placeholder="请选择">
+                        <el-option
+                                v-for="item in ruleForm.options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
 
-        <el-form-item label="ip" prop="ip">
-            <el-select v-model="ruleForm.ip" placeholder="请选择">
-                <el-option
-                        v-for="item in ruleForm.options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
-        </el-form-item>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="端口" prop="port">
+                    <el-input  v-model="ruleForm.port"></el-input>
+                </el-form-item>
+            </el-col>
 
-        <el-form-item label="端口" prop="port">
-            <el-input  v-model="ruleForm.port"></el-input>
-        </el-form-item>
-
-        <el-form-item label="发送的报文" prop="fsbw">
+        </el-row>
+            <el-form-item label="发送的报文" prop="fsbw">
             <el-input  v-model="ruleForm.fsbw"></el-input>
+        </el-form-item>
+        <el-form-item label="发送格式化" prop="resXmlText" class="" >
+            <el-input type="textarea" autosize
+                      v-model="ruleForm.reqXmlText" ></el-input>
         </el-form-item>
     </el-form>
     </div>
@@ -284,6 +293,7 @@ import {BrowserWindow} from "electron";
                     port: '14015',
                     fsbw: '',
                     resXmlText: '',
+                    reqXmlText: '',
                     options: [{
                             value: '172.31.210.18',
                             label: '开发环境-172.31.210.18'
@@ -327,6 +337,7 @@ import {BrowserWindow} from "electron";
                         //验证表单后把返回结果清空，避免超时或者其他返回内容未清空造成使用者误解。
                         _this.ruleForm.resText = '';
                         _this.ruleForm.resXmlText = '';
+                        _this.ruleForm.reqXmlText = showXml(_this.ruleForm.reqText);
                         var reqtxt2utf8 = encoding.convert(_this.ruleForm.reqText, "utf-8");
                         var realReqTextLengths =getLength(_this.ruleForm.reqText);
                         console.log("realReqTextLengths" +realReqTextLengths);
