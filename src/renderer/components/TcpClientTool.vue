@@ -15,19 +15,19 @@ import {BrowserWindow} from "electron";
             </el-form-item>
 
 
-            <el-form-item label="返回不含头格式化" prop="resXmlText" class="" >
+            <el-form-item label="返回格式化" prop="resXmlText" class="" >
+<!--                <div>-->
+                    <!-- 如果是动态加载内容如变量 'sourcecode' 赋值再渲染，可用以下方式 -->
+
+<!--                <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>-->
+<!--                </div>-->
 
 
 
-
-
-
+                        <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>
 
             </el-form-item>
-            <div>
-                <!-- 如果是动态加载内容如变量 'sourcecode' 赋值再渲染，可用以下方式 -->
-                <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>
-            </div>
+
             <el-form-item label="服务器返回" prop="resText" class="bg-success" >
                 <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
             </el-form-item>
@@ -50,9 +50,19 @@ import {BrowserWindow} from "electron";
             <el-form-item label="发送的报文" >
                 <el-input  v-model="ruleForm.fsbw"></el-input>
             </el-form-item>
+
             <el-form-item label="发送格式化"  >
+<!--                <el-input type="textarea" autosize-->
+<!--                          v-model="ruleForm.reqXmlText" ></el-input>-->
+                <pre v-highlight="ruleForm.reqXmlText"><code class="xml"></code></pre>
+            </el-form-item>
+            <el-form-item label="发送不含头"  >
+                                <el-input type="textarea" autosize
+                                          v-model="ruleForm.reqXmlText" ></el-input>
+            </el-form-item>
+            <el-form-item label="返回不含头" prop="resXmlText" class="" >
                 <el-input type="textarea" autosize
-                          v-model="ruleForm.reqXmlText" ></el-input>
+                          v-model="ruleForm.resXmlText" ></el-input>
             </el-form-item>
         </el-form>
     </div>
