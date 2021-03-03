@@ -1,6 +1,8 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
+        <el-button type="primary" disabled><router-link id ="tcpclient" to="/">Tcp请求头含报文长度</router-link></el-button>
+        <el-button type="success" disabled><router-link id ="tcpclientTool" to="/tcpclient">Tcp请求不含报文长度</router-link></el-button>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 <!--        <el-form-item label="交易名称" prop="name">-->
@@ -9,7 +11,10 @@ import {BrowserWindow} from "electron";
 <!--        </el-form-item>-->
 
 
+            <el-form-item label="交易名称" prop="name">
+                <el-form-item  >Tcp请求头含报文长度</el-form-item>
 
+            </el-form-item>
         <el-form-item label="发送报文" prop="reqText" >
             <el-input type="textarea" autosize v-model="ruleForm.reqText"></el-input>
         </el-form-item>
@@ -48,7 +53,10 @@ import {BrowserWindow} from "electron";
             <el-form-item label="发送的报文" prop="fsbw">
             <el-input  v-model="ruleForm.fsbw"></el-input>
         </el-form-item>
-
+            <el-form-item label="返回不含头" prop="resXmlText" class="" >
+                <el-input type="textarea" autosize
+                          v-model="ruleForm.resXmlText" ></el-input>
+            </el-form-item>
 <!--        <el-form-item label="发送格式化" prop="resXmlText" class="" >-->
 <!--            <el-input type="textarea" autosize-->
 <!--                      v-model="ruleForm.reqXmlText" ></el-input>-->
