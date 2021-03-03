@@ -1,49 +1,64 @@
 import {BrowserWindow} from "electron";
 <template>
+
     <div>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
-        <el-form-item label="发送的报文" prop="reqText" >
-            <el-input  v-model="ruleForm.reqText"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-        <el-form-item label="返回不含头" prop="resXmlText" class="" >
-            <el-input type="textarea" autosize
-                      v-model="ruleForm.resXmlText" ></el-input>
-        </el-form-item>
-        <el-form-item label="服务器返回" prop="resText" class="bg-success" >
-            <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
-        </el-form-item>
 
-        <el-row>
-            <el-col :span="8">
-                <el-form-item label="端口" >
-                    <el-input  v-model="ruleForm.ip"></el-input>
-                </el-form-item>
+            <el-form-item label="发送报文" prop="reqText" >
+                <el-input  v-model="ruleForm.reqText"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
 
-            </el-col>
-            <el-col :span="8">
-                <el-form-item label="端口" >
-                    <el-input  v-model="ruleForm.port"></el-input>
-                </el-form-item>
-            </el-col>
 
-        </el-row>
-        <el-form-item label="发送的报文" prop="fsbw">
-            <el-input  v-model="ruleForm.fsbw"></el-input>
-        </el-form-item>
-        <el-form-item label="发送格式化"  >
-            <el-input type="textarea" autosize
-                      v-model="ruleForm.reqXmlText" ></el-input>
-        </el-form-item>
-    </el-form>
+            <el-form-item label="返回不含头格式化" prop="resXmlText" class="" >
+
+
+
+
+
+
+
+            </el-form-item>
+            <div>
+                <!-- 如果是动态加载内容如变量 'sourcecode' 赋值再渲染，可用以下方式 -->
+                <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>
+            </div>
+            <el-form-item label="服务器返回" prop="resText" class="bg-success" >
+                <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
+            </el-form-item>
+
+
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="端口" >
+                        <el-input  v-model="ruleForm.ip"></el-input>
+                    </el-form-item>
+
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="端口" >
+                        <el-input  v-model="ruleForm.port"></el-input>
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+            <el-form-item label="发送的报文" >
+                <el-input  v-model="ruleForm.fsbw"></el-input>
+            </el-form-item>
+            <el-form-item label="发送格式化"  >
+                <el-input type="textarea" autosize
+                          v-model="ruleForm.reqXmlText" ></el-input>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 <script>
+
     function showXml(str){
         var text = str
 
@@ -127,7 +142,7 @@ import {BrowserWindow} from "electron";
 
 
     function getLength(str) {
-         // UTF-8格式占3个，gbk，占用2个
+        // UTF-8格式占3个，gbk，占用2个
         ///<summary>获得字符串实际长度，中文3，英文1</summary>
         ///<param name="str">要获得长度的字符串</param>
         var str=str+'';
@@ -268,6 +283,8 @@ import {BrowserWindow} from "electron";
                 }
             };
         },
+
+
         methods: {
             submitForm(formName) {
                 var _this = this;
@@ -286,6 +303,8 @@ import {BrowserWindow} from "electron";
                         _this.ruleForm.fsbw = reqString;
                         console.log("请求字符串" )
                         console.log(reqString);
+
+
 
 
                         // var realReq = reqString;
@@ -313,6 +332,12 @@ import {BrowserWindow} from "electron";
                             _this.ruleForm.resText = decodeResData;
                             var resXmlTextString = decodeResData.toString().slice(8);
                             _this.ruleForm.resXmlText =showXml(resXmlTextString);
+
+
+
+
+
+
                             // 完全关闭连接
                             client.destroy();
                         });
