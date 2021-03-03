@@ -18,7 +18,8 @@ import {BrowserWindow} from "electron";
             <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
         <el-form-item label="返回不含头" prop="resXmlText" class="" >
-            <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>
+            <el-input type="textarea" autosize
+                      v-model="ruleForm.resXmlText" ></el-input>
         </el-form-item>
         <el-form-item label="服务器返回" prop="resText" class="bg-success" >
             <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
@@ -48,11 +49,10 @@ import {BrowserWindow} from "electron";
             <el-form-item label="发送的报文" prop="fsbw">
             <el-input  v-model="ruleForm.fsbw"></el-input>
         </el-form-item>
-
-<!--        <el-form-item label="发送格式化" prop="resXmlText" class="" >-->
-<!--            <el-input type="textarea" autosize-->
-<!--                      v-model="ruleForm.reqXmlText" ></el-input>-->
-<!--        </el-form-item>-->
+        <el-form-item label="发送格式化" prop="resXmlText" class="" >
+            <el-input type="textarea" autosize
+                      v-model="ruleForm.reqXmlText" ></el-input>
+        </el-form-item>
     </el-form>
     </div>
 </template>

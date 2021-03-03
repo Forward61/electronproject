@@ -7,7 +7,7 @@ import {BrowserWindow} from "electron";
 
 
             <el-form-item label="发送报文" prop="reqText" >
-                <el-input  v-model="ruleForm.reqText"></el-input>
+                <el-input type="textarea" autosize  v-model="ruleForm.reqText"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
@@ -47,9 +47,9 @@ import {BrowserWindow} from "electron";
                 </el-col>
 
             </el-row>
-            <el-form-item label="发送的报文" >
-                <el-input  v-model="ruleForm.fsbw"></el-input>
-            </el-form-item>
+<!--            <el-form-item label="发送的报文" >-->
+<!--                <el-input  v-model="ruleForm.fsbw"></el-input>-->
+<!--            </el-form-item>-->
 
             <el-form-item label="发送格式化"  >
 <!--                <el-input type="textarea" autosize-->
@@ -379,5 +379,8 @@ import {BrowserWindow} from "electron";
 <style>
     .bg-success {
         background: #67C23A;
+    }
+    .hljs {
+        line-height: 20px;
     }
 </style>

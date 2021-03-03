@@ -8,12 +8,12 @@ export default new Router({
     {
       path: '/',
       name: 'tcpclientTool-page',
-      component: require('@/components/TcpClientTool').default
+      component: require('@/components/TcpClient').default
     },
     {
       path: '/tcpclient',
       name: 'tcpclient-page',
-      component: require('@/components/TcpClient').default
+      component: require('@/components/TcpClientTool').default
     },
     {
       path: '/landing-page',
