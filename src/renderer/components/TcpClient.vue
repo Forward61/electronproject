@@ -19,7 +19,7 @@ import {BrowserWindow} from "electron";
             <el-input type="textarea" autosize v-model="ruleForm.reqText"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
+            <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">发送</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
         <el-form-item label="返回不含头" prop="resXmlText" class="" >
@@ -280,6 +280,11 @@ import {BrowserWindow} from "electron";
     export default {
         data() {
             return {
+                scope: {
+                    row:{
+                        loading: false
+                    }
+                },
                 str: '',
                 ruleForm: {
                     name: '',
@@ -342,6 +347,8 @@ import {BrowserWindow} from "electron";
                 var encoding = require('encoding')
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        //加载loading 图层
+                        _this.scope.row.loading =true;
                         //验证表单后把返回结果清空，避免超时或者其他返回内容未清空造成使用者误解。
                         _this.ruleForm.resText = '';
                         _this.ruleForm.resXmlText = '';
@@ -379,7 +386,15 @@ import {BrowserWindow} from "electron";
                             client.write(realReq);
 
                         });
-
+                        //超时时间，单位 毫秒
+                        client.setTimeout(60000,function (exception) {
+                            console.log('CONNECTED Timeout: ' + HOST + ':' + PORT);
+                            _this.scope.row.loading =false;
+                            console.log('服务端超时:' + exception);
+                            _this.ruleForm.resText = 'CONNECTED Timeout: ' + HOST + ':' + PORT;
+                            client.end();
+                            client.destroy();
+                        })
 // 为客户端添加“data”事件处理函数
 // data是服务器发回的数据
                         client.on('data', function(data) {
@@ -390,6 +405,8 @@ import {BrowserWindow} from "electron";
                             _this.ruleForm.resText = decodeResData;
                             var resXmlTextString = decodeResData.toString().slice(8);
                             _this.ruleForm.resXmlText =showXml(resXmlTextString);
+
+                            _this.scope.row.loading =false;
                             // 完全关闭连接
                             client.destroy();
                         });
@@ -397,13 +414,15 @@ import {BrowserWindow} from "electron";
 // 为客户端添加“close”事件处理函数
                         client.on('close', function() {
                             console.log('Connection closed');
+                            _this.scope.row.loading =false;
+
                         });
 //数据错误事件
                         client.on('error',function(exception){
                             console.log('服务端错误socket error:' + exception.toString());
                             _this.ruleForm.resText = exception.toString();
                             // _this.ruleForm.resXmlText = exception.toString().slice(3);
-
+                            _this.scope.row.loading =false;
                             client.end();
                         });
                     } else {
