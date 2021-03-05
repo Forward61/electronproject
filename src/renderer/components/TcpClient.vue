@@ -12,7 +12,7 @@ import {BrowserWindow} from "electron";
 
 
             <el-form-item label="交易名称" prop="name">
-                <el-form-item  >Tcp请求头含报文长度</el-form-item>
+                <el-form-item  >Tcp请求头包含报文长度</el-form-item>
 
             </el-form-item>
         <el-form-item label="发送报文" prop="reqText" >
