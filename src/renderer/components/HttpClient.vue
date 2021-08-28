@@ -369,7 +369,7 @@ export default {
           console.log("请求字符串" )
           console.log(reqString);
           // Node.js中的http请求客户端示例(request client)
-
+//https://www.jb51.net/article/112937.htm
           var request = require('request');
 
           request('http://127.0.0.1:8080/api/person', function (error, response, body) {
