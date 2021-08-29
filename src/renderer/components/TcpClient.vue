@@ -302,8 +302,10 @@ import {BrowserWindow} from "electron";
                     resText: '',
                     lsh:'',
 
-                    ip: '127.0.0.1',
-                    port: '18001',
+
+                    ip: '172.31.210.18',
+                    port: '14015',
+
                     fsbw: '',
                     resXmlText: '',
                     reqXmlText: '',
@@ -344,7 +346,8 @@ import {BrowserWindow} from "electron";
         methods: {
             submitForm(formName) {
                 var _this = this;
-                var encoding = require('encoding');
+
+                var encoding = require('encoding')
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         //加载loading 图层
@@ -373,7 +376,6 @@ import {BrowserWindow} from "electron";
                         var realReq = reqString;
 
 
-                        // var net = import('net');
                         var net = require('net');
                         var HOST = _this.ruleForm.ip;
                         var PORT = _this.ruleForm.port;

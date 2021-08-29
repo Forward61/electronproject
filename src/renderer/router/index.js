@@ -7,8 +7,10 @@ export default new Router({
   routes: [
     {
       path: '/',
+
       name: 'HttpclientTool-page',
       component: require('@/components/HttpClient').default
+
     },
     {
       path: '/tcpclient',
