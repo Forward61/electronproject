@@ -25,6 +25,32 @@ import {BrowserWindow} from "electron";
         <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">发送</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
+
+      <el-form-item label="业主姓名" prop="ownerNamd" class="" >
+        <pre v-highlight="ruleForm.ownerNamd"><code class="xml"></code></pre>
+      </el-form-item>
+      <el-form-item label="业主证件号码" prop="ownerCardNo" class="" >
+        <pre v-highlight="ruleForm.ownerCardNo"><code class="xml"></code></pre>
+      </el-form-item>
+      <el-form-item label="房屋坐落" prop="houseAddress" class="" >
+        <pre v-highlight="ruleForm.houseAddress"><code class="xml"></code></pre>
+      </el-form-item>
+      <el-form-item label="计划缴款金额" prop="payMoney" class="" >
+        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
+      </el-form-item>
+
+      <el-form-item label="计划缴款金额" prop="payMoney" class="" >
+        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
+      </el-form-item>
+      <el-form-item label="计划缴款金额" prop="payMoney" class="" >
+        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
+      </el-form-item>
+      <el-form-item label="计划缴款金额" prop="payMoney" class="" >
+        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
+      </el-form-item>
+
+
+
       <el-form-item label="返回不含头" prop="resXmlText" class="" >
         <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>
       </el-form-item>
