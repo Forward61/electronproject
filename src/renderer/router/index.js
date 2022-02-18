@@ -8,6 +8,13 @@ export default new Router({
     {
       path: '/',
 
+      name: 'Pos001-page',
+      component: require('@/components/Pos001').default
+
+    },
+    {
+      path: '/httpClient',
+
       name: 'HttpclientTool-page',
       component: require('@/components/HttpClient').default
 
@@ -31,11 +38,11 @@ export default new Router({
       component: require('@/components/BalancePage').default
     },{
       path:'/stateReq',
-      name: 'balance-page',
+      name: 'stateReq-page',
       component: require('@/components/StatePage').default
     },{
       path:'/unfreezeReq',
-      name: 'balance-page',
+      name: 'unfreezeReq-page',
       component: require('@/components/UnfreezePage').default
     }
   ]
