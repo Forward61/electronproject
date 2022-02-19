@@ -11,39 +11,41 @@ import {BrowserWindow} from "electron";
     </el-form>
     <el-form  :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
 
-
-      <el-form-item label="实际缴款人名称" prop="areaCode" >
-        <el-input type="text" autosize v-model="ruleForm.areaCode"  size="medium" class="el-input002"></el-input>
+      <el-form-item label="渠道交易日期" prop="transactionDate" >
+        <el-input type="textarea" autosize v-model="ruleForm.transactionDate"></el-input>
       </el-form-item>
-      <el-form-item label="实际缴款人开户行" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="实际缴款人名称" prop="realFeeName" >
+        <el-input type="text" autosize v-model="ruleForm.realFeeName"  size="medium" class="el-input002"></el-input>
       </el-form-item>
-      <el-form-item label="实际缴款人账号" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="实际缴款人开户行" prop="realFeeBank" >
+        <el-input type="textarea" autosize v-model="ruleForm.realFeeBank"></el-input>
       </el-form-item>
-      <el-form-item label="缴款方式" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="实际缴款人账号" prop="realFeeCard" >
+        <el-input type="textarea" autosize v-model="ruleForm.realFeeCard"></el-input>
       </el-form-item>
-      <el-form-item label="交易请求时间" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="缴款方式" prop="feeType" >
+        <el-input type="textarea" autosize v-model="ruleForm.feeType"></el-input>
       </el-form-item>
-      <el-form-item label="商户号" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="交易请求时间" prop="tradeTime" >
+        <el-input type="textarea" autosize v-model="ruleForm.tradeTime"></el-input>
       </el-form-item>
-      <el-form-item label="终端号" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="商户号" prop="clientNo" >
+        <el-input type="textarea" autosize v-model="ruleForm.clientNo"></el-input>
       </el-form-item>
-      <el-form-item label="渠道流水号" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="终端号" prop="systemNo" >
+        <el-input type="textarea" autosize v-model="ruleForm.systemNo"></el-input>
+      </el-form-item>
+      <el-form-item label="渠道流水号" prop="channelSeq" >
+        <el-input type="textarea" autosize v-model="ruleForm.channelSeq"></el-input>
       </el-form-item>
       <el-form-item style="margin-left:50px">
-        <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">发送</el-button>
+        <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">缴费</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
-        <el-button type="primary" :loading="scope.row.loading" @click="to()">缴费</el-button>
+<!--        <el-button type="primary" :loading="scope.row.loading" @click="to()">缴费</el-button>-->
 
       </el-form-item>
 
-      <el-descriptions class="margin-top" title="响应信息" :column="3" :size="size" border>
+      <el-descriptions class="margin-top" title="房屋信息" :column="3" :size="size" border>
         <template slot="extra">
           <!--          <el-button type="primary" size="small">操作</el-button>-->
         </template>
@@ -542,18 +544,27 @@ import {BrowserWindow} from "electron";
           fsbw: '',
           resXmlText: '',
           reqXmlText: '',
+          realFeeName:'',
+          realFeeBank:'',
+          realFeeCard:'',
+          feeType:'',
+          tradeTime:'',
+          clientNo:'',
+          systemNo:'',
+          channelSeq:'',
+          transactionDate: '',
           options: [{
-            value: '172.31.210.18',
-            label: '开发环境-172.31.210.18'
+            value: '172.31.207.14',
+            label: '开发环境-172.31.207.14'
           }, {
-            value: '172.31.210.19',
-            label: 'SIT环境-210.19'
+            value: '172.31.207.15',
+            label: 'SIT环境-207.15'
           }, {
-            value: '172.31.210.20',
-            label: 'UAT环境-210.20'
+            value: '172.31.207.16',
+            label: 'UAT环境-207.16'
           }, {
-            value: '172.31.210.21',
-            label: 'ZSC环境-210.21'
+            value: '172.31.207.17',
+            label: 'ZSC环境-207.17'
           },
             {
               value: '127.0.0.1',
@@ -562,16 +573,58 @@ import {BrowserWindow} from "electron";
             }]
         },
         rules: {
-          areaCode: [
-            { required: false, message: '地区码不能为空', trigger: 'blur' }
+          transactionDate: [
+            { required: true, message: '请输入渠道交易日期', trigger: 'blur' }
 
           ],
-          payCode: [
-            { required: false, message: '请输入缴款编码', trigger: 'change' }
+          realFeeName: [
+            { required: false, message: '实际缴款人不能为空', trigger: 'blur' }
+
+          ],
+          realFeeBank: [
+            { required: false, message: '请输入实际缴款人开户行', trigger: 'change' }
+          ],
+          realFeeCard: [
+            { required: false, message: '请输入实际缴款人账号', trigger: 'blur' }
+
+          ],
+          feeType: [
+            { required: true, message: '请输入缴款方式', trigger: 'change' }
+          ],
+          tradeTime: [
+            { required: true, message: '请输入交易请求时间', trigger: 'blur' }
+          ],
+          clientNo: [
+            { required: true, message: '请输入商户号', trigger: 'change' }
+          ],
+          systemNo: [
+            { required: true, message: '请输入终端号', trigger: 'blur' }
+          ],
+          channelSeq: [
+            { required: true, message: '请输入渠道流水号', trigger: 'change' }
           ]
 
         }
       };
+    },
+    props:['jsonString'],
+    mounted(){
+      console.log(this.$route.params.jsonString, this.jsonString)
+      console.log(this.jsonString.Message.Message_Body.response.ownerName)
+      var _this = this;
+
+      console.log('xml2json  ' + _this.$x2js.js2xml(this.jsonString))
+      var jsonObj = this.jsonString
+      _this.ruleForm.areaCode=jsonObj.Message.Message_Body.response.areaCode
+      _this.ruleForm.payCode=jsonObj.Message.Message_Body.response.payCode
+
+      _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
+      _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
+      _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress
+      _this.ruleForm.payMoney=jsonObj.Message.Message_Body.response.payMoney
+      _this.ruleForm.monAccountNo=jsonObj.Message.Message_Body.response.monAccountNo
+      _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
+      _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
     },
     methods: {
       to(){
@@ -581,6 +634,7 @@ import {BrowserWindow} from "electron";
           name: 'Pos002',
           params: {
             jsonString: _this.ruleForm.jsonString
+
           }
         })
       },
@@ -589,7 +643,6 @@ import {BrowserWindow} from "electron";
         var encoding = require('encoding');
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            _this.resetResForm()
             //加载loading 图层
             _this.scope.row.loading =true;
             //验证表单后把返回结果清空，避免超时或者其他返回内容未清空造成使用者误解。
@@ -615,12 +668,21 @@ import {BrowserWindow} from "electron";
             var request = require('request');
             var url ='http://127.0.0.1:16111/ysjg';
             var reqJson ={}
-            reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0"} } } }')
+            // reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0"} } } }')
+            reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001","transactionDate": "0"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
 
-
+            reqJson.Message.Message_Header.transactionDate=_this.ruleForm.transactionDate
             reqJson.Message.Message_Header.externalReferenceNo=getDateString()+randomNum(10000,99999)
             reqJson.Message.Message_Body.request.areaCode=_this.ruleForm.areaCode
             reqJson.Message.Message_Body.request.payCode=_this.ruleForm.payCode
+            reqJson.Message.Message_Body.request.realFeeName=_this.ruleForm.realFeeName
+            reqJson.Message.Message_Body.request.realFeeBank=_this.ruleForm.realFeeBank
+            reqJson.Message.Message_Body.request.realFeeCard=_this.ruleForm.realFeeCard
+            reqJson.Message.Message_Body.request.feeType=_this.ruleForm.feeType
+            reqJson.Message.Message_Body.request.tradeTime=_this.ruleForm.tradeTime
+            reqJson.Message.Message_Body.request.clientNo=_this.ruleForm.clientNo
+            reqJson.Message.Message_Body.request.systemNo=_this.ruleForm.systemNo
+            reqJson.Message.Message_Body.request.channelSeq=_this.ruleForm.channelSeq
 
 
             console.log('req ' +reqJson)
@@ -649,15 +711,19 @@ import {BrowserWindow} from "electron";
                 var returnMsg = jsonObj.Message.Message_Body.response.returnMsg
 
                 if(returnCode==='0000'){
-                  _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
-                  _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
-                  _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress
-                  _this.ruleForm.payMoney=jsonObj.Message.Message_Body.response.payMoney
-                  _this.ruleForm.monAccountNo=jsonObj.Message.Message_Body.response.monAccountNo
-                  _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
-                  _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
+                  _this.$alert('响应码' +returnCode+'\n响应信息'+returnMsg+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '缴费成功\n', {
+                    confirmButtonText: '确定'
+
+                  })
+                  // _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
+                  // _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
+                  // _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress
+                  // _this.ruleForm.payMoney=jsonObj.Message.Message_Body.response.payMoney
+                  // _this.ruleForm.monAccountNo=jsonObj.Message.Message_Body.response.monAccountNo
+                  // _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
+                  // _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
                 }else{
-                  _this.$alert('响应码' +returnCode+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '响应信息'+returnMsg, {
+                  _this.$alert('响应码' +returnCode+'\n响应信息'+returnMsg+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '缴费异常', {
                     confirmButtonText: '确定'
 
                   })
@@ -696,24 +762,20 @@ import {BrowserWindow} from "electron";
       resetForm(formName) {
         this.$refs[formName].resetFields();
         var _this = this;
-        _this.ruleForm.ownerName=''
-        _this.ruleForm.ownerCardNo=''
-        _this.ruleForm.houseAddress=''
-        _this.ruleForm.payMoney=''
-        _this.ruleForm.monAccountNo=''
-        _this.ruleForm.monAccountName=''
-        _this.ruleForm.remark=''
+
 
       },
       resetResForm(){
         var _this = this;
-        _this.ruleForm.ownerName=''
-        _this.ruleForm.ownerCardNo=''
-        _this.ruleForm.houseAddress=''
-        _this.ruleForm.payMoney=''
-        _this.ruleForm.monAccountNo=''
-        _this.ruleForm.monAccountName=''
-        _this.ruleForm.remark=''
+        _this.ruleForm.realFeeName=''
+        _this.ruleForm.realFeeBank=''
+        _this.ruleForm.realFeeCard=''
+        _this.ruleForm.feeType=''
+        _this.ruleForm.tradeTime=''
+        _this.ruleForm.clientNo=''
+        _this.ruleForm.systemNo=''
+        _this.ruleForm.channelSeq=''
+
       }
     }
   }

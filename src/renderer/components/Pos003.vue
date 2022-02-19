@@ -6,97 +6,24 @@ import {BrowserWindow} from "electron";
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 
       <el-form-item label="交易名称" prop="name">
-        <el-form-item  >Pos应缴资金查询</el-form-item>
+        <el-form-item  >Pos冲正确认</el-form-item>
 
       </el-form-item>
-      <el-form-item label="地区编码" prop="areaCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.areaCode"></el-input>
+      <el-form-item label="原交易流水号" prop="channelSeq" >
+        <el-input type="textarea" autosize v-model="ruleForm.channelSeq"></el-input>
       </el-form-item>
-      <el-form-item label="缴存编号" prop="payCode" >
-        <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
+      <el-form-item label="原交易日期" prop="channelDate" >
+        <el-input type="textarea" autosize v-model="ruleForm.channelDate"></el-input>
       </el-form-item>
+        <el-form-item label="终端号" prop="systemNo" >
+            <el-input type="textarea" autosize v-model="ruleForm.systemNo"></el-input>
+        </el-form-item>
       <el-form-item>
         <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">查询</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
-        <el-button type="success" round  @click="to()">去缴费页面</el-button>
 
       </el-form-item>
 
-      <el-descriptions class="margin-top" title="响应信息" :column="3" :size="size" border>
-        <template slot="extra">
-<!--          <el-button type="primary" size="small">操作</el-button>-->
-        </template>
-        <el-descriptions-item>
-          <template slot="label" v-highlight="ruleForm.resXmlText">
-            <i class="el-icon-user"></i>
-            业主姓名
-          </template>
-
-          <span>{{ ruleForm.ownerName}}</span>
-
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
-            业主证件号码
-          </template>
-<!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
-          <span>{{ ruleForm.ownerCardNo}}</span>
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-location-outline"></i>
-            房屋地址
-          </template>
-          <span>{{ ruleForm.houseAddress}}</span>
-
-        </el-descriptions-item>
-
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
-            业主证件号码
-          </template>
-          <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
-          <span>{{ ruleForm.ownerCardNo}}</span>
-        </el-descriptions-item>
-
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
-            计划缴款金额
-          </template>
-          <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
-          <span>{{ ruleForm.payMoney}}</span>
-        </el-descriptions-item>
-
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
-            监管账户账号
-          </template>
-          <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
-          <span>{{ ruleForm.monAccountNo}}</span>
-        </el-descriptions-item>
-
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-tickets"></i>
-            备注
-          </template>
-          <span>{{ ruleForm.remark}}</span>
-
-          <!--          <el-tag size="small">学校</el-tag>-->
-        </el-descriptions-item>
-
-      </el-descriptions>
-
-
-
-
-<!--      <el-form-item label="返回不含头" prop="resXmlText" class="" >-->
-<!--        <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
       <el-form-item label="服务器返回" prop="resText" class="bg-success" >
         <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
       </el-form-item>
@@ -474,6 +401,9 @@ export default {
 
         areaCode: '',
         payCode: '',
+        channelSeq: '',
+        channelDate: '',
+        systemNo: '',
         ownerName: '',
         ownerCardNo: '',
         houseAddress: '',
@@ -511,12 +441,16 @@ export default {
           }]
       },
       rules: {
-        areaCode: [
-          { required: true, message: '地区码不能为空', trigger: 'blur' }
+        channelSeq: [
+          { required: true, message: '请输入原交易流水号', trigger: 'blur' }
 
         ],
-        payCode: [
-          { required: true, message: '请输入缴款编码', trigger: 'change' }
+        channelDate: [
+          { required: true, message: '请输入原交易日期', trigger: 'change' }
+        ],
+        systemNo: [
+          { required: true, message: '请输入终端号', trigger: 'blur' }
+
         ]
 
       }
@@ -569,15 +503,17 @@ export default {
           var request = require('request');
           var url ='http://'+_this.ruleForm.ip+':16111/ysjg';
           var reqJson ={}
-          reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
+          reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"channelSeq": "05", "channelDate": "0","systemNo": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
 
 
           reqJson.Message.Message_Header.externalReferenceNo=getDateString()+randomNum(10000,99999)
-          reqJson.Message.Message_Body.request.areaCode=_this.ruleForm.areaCode
-          reqJson.Message.Message_Body.request.payCode=_this.ruleForm.payCode
+          reqJson.Message.Message_Body.request.channelSeq=_this.ruleForm.channelSeq
+          reqJson.Message.Message_Body.request.channelDate=_this.ruleForm.channelDate
+          reqJson.Message.Message_Body.request.systemNo=_this.ruleForm.systemNo
 
 
-          console.log('req ' +reqJson)
+
+            console.log('req ' +reqJson)
           var bodyChar=_this.$x2js.js2xml(reqJson)
           console.log('bodyChar ' +bodyChar)
           _this.ruleForm.fsbw = bodyChar;
@@ -603,18 +539,26 @@ export default {
               var returnMsg = jsonObj.Message.Message_Body.response.returnMsg
 
               if(returnCode==='0000'){
-                _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
-                _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
-                _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress
-                _this.ruleForm.payMoney=jsonObj.Message.Message_Body.response.payMoney
-                _this.ruleForm.monAccountNo=jsonObj.Message.Message_Body.response.monAccountNo
-                _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
-                _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
-              }else{
-                _this.$alert('响应码' +returnCode+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '响应信息'+returnMsg, {
-                  confirmButtonText: '确定'
+                  _this.$alert('响应码' +returnCode+'\n响应信息:'+returnMsg+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '冲正成功\n', {
+                      confirmButtonText: '确定'
 
-                })
+                  })
+                // _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
+                // _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
+                // _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress
+                // _this.ruleForm.payMoney=jsonObj.Message.Message_Body.response.payMoney
+                // _this.ruleForm.monAccountNo=jsonObj.Message.Message_Body.response.monAccountNo
+                // _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
+                // _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
+              }else{
+                  _this.$alert('响应码' +returnCode+'\n响应信息:'+returnMsg+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '冲正异常', {
+                      confirmButtonText: '确定'
+
+                  })
+                // _this.$alert('响应码' +returnCode+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '响应信息'+returnMsg, {
+                //   confirmButtonText: '确定'
+                //
+                // })
               }
 
             } else (

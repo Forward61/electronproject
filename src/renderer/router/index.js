@@ -22,6 +22,15 @@ export default new Router({
 
     },
     {
+      path: '/Pos003',
+
+      name: 'Pos003',
+      props: true,
+
+      component: require('@/components/Pos003').default
+
+    },
+    {
       path: '/httpClient',
 
       name: 'HttpclientTool-page',
