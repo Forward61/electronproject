@@ -512,6 +512,9 @@ export default {
   mounted(){
     console.log(this.$route.params.jsonString, this.jsonString)
     console.log(this.jsonString.Message.Message_Body.response.ownerName)
+    var _this = this;
+
+    console.log('xml2json  ' + _this.$x2js.js2xml(this.jsonString))
   },
   methods: {
     submitForm(formName) {

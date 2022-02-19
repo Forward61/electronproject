@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
+import x2js from 'x2js'
 
 import App from './App'
 import router from './router'
@@ -16,6 +17,8 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 
 Vue.use(Highlight);
+Vue.prototype.$x2js = new x2js()
+// Vue.x2js = Vue.prototype.$x2js = x2js
 
 /* eslint-disable no-new */
 

@@ -584,6 +584,9 @@ export default {
             _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
             _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
 
+
+
+
           });
 
             // request('http://127.0.0.1:16111/ysjg', function (error, response, body) {
