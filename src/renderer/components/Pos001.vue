@@ -465,19 +465,23 @@ export default {
 //https://www.jb51.net/article/112937.htm
           var request = require('request');
           var url ='http://127.0.0.1:16111/ysjg';
+          var bodyChar = '<Message> <Message_Body> <request>0000</request> <requestMsg>成功</requestMsg> </Message_Body> </Message>';
+
           request({
             url: url,
             method: "POST",
             headers: {
               "content-type": "application/xml",
             },
-            body: '<Message> <Message_Body> <request>0000</request> <requestMsg>成功</requestMsg> </Message_Body> </Message>'
+            body: bodyChar
           }, function(error, response, body) {
             if (!error && response.statusCode == 200) {
               console.log(' '+body) // 请求成功的处理逻辑
             } else (
                     console.log('else' +body)
             )
+            var reqjsonObj=xmlObj2json(xmlStr2XmlObj(bodyChar))
+            console.log('req request ' + reqjsonObj.Message.Message_Body.request)
             _this.scope.row.loading =false;
                 _this.ruleForm.resText = body;
             _this.ruleForm.resXmlText =showXml(body);
