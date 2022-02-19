@@ -2,33 +2,23 @@ import {BrowserWindow} from "electron";
 <template>
   <div>
     <el-button type="primary" disabled><router-link id ="Pos001" to="/">Pos应缴资金查询</router-link></el-button>
-    <el-button type="primary" disabled><router-link id ="Pos002" to="/Pos002">Pos缴存</router-link></el-button>
-
-    <el-button type="success" disabled><router-link id ="tcpclientTool" to="/tcpclient">Http请求不含报文长度</router-link></el-button>
-
+    <el-button type="primary" disabled><router-link id ="Pos003" to="/Pos002">Pos冲正确认</router-link></el-button>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <!--        <el-form-item label="交易名称" prop="name">-->
-      <!--            <el-form-item v-model="ruleForm.name" >Tcp</el-form-item>-->
-
-      <!--        </el-form-item>-->
-
 
       <el-form-item label="交易名称" prop="name">
         <el-form-item  >Pos应缴资金查询</el-form-item>
 
       </el-form-item>
-      <el-form-item label="地区编码" prop="reqText" >
+      <el-form-item label="地区编码" prop="areaCode" >
         <el-input type="textarea" autosize v-model="ruleForm.areaCode"></el-input>
       </el-form-item>
-      <el-form-item label="缴存编号" prop="reqText" >
+      <el-form-item label="缴存编号" prop="payCode" >
         <el-input type="textarea" autosize v-model="ruleForm.payCode"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">发送</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
         <el-button type="primary" :loading="scope.row.loading" @click="to()">缴费</el-button>
-
-        <!--        <div><router-link :to="{path:'/Pos002',query:{id:1}}">缴费</router-link></div>-->
 
       </el-form-item>
 
@@ -100,28 +90,7 @@ import {BrowserWindow} from "electron";
         </el-descriptions-item>
 
       </el-descriptions>
-<!--      <el-form-item label="业主姓名" prop="ownerName" class="" >-->
-<!--        <pre v-highlight="ruleForm.ownerName"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="业主证件号码" prop="ownerCardNo" class="" >-->
-<!--        <pre v-highlight="ruleForm.ownerCardNo"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="房屋坐落" prop="houseAddress" class="" >-->
-<!--        <pre v-highlight="ruleForm.houseAddress"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="计划缴款金额" prop="payMoney" class="" >-->
-<!--        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
 
-<!--      <el-form-item label="监管账户账号" prop="monAccountNo" class="" >-->
-<!--        <pre v-highlight="ruleForm.monAccountNo"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="监管账户户名" prop="monAccountName" class="" >-->
-<!--        <pre v-highlight="ruleForm.monAccountName"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="备注" prop="remark" class="" >-->
-<!--        <pre v-highlight="ruleForm.remark"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
 
 
 
@@ -456,8 +425,7 @@ export default {
         type: [],
         resource: '',
         desc: '',
-        // jydm: '',
-        // jydmLength: '2',
+
         areaCode: '',
         payCode: '',
         ownerName: '',
@@ -498,16 +466,13 @@ export default {
       },
       rules: {
         areaCode: [
-          { required: true, message: '地区码不能为空', trigger: 'blur' }
+          { required: false, message: '地区码不能为空', trigger: 'blur' }
 
         ],
-        resource: [
-          { required: false, message: '请选择活动资源', trigger: 'change' }
+        payCode: [
+          { required: false, message: '请输入缴款编码', trigger: 'change' }
         ]
-        // ,
-        // desc: [
-        //     { required: false, message: '请填写活动形式', trigger: 'blur' }
-        // ]
+
       }
     };
   },
@@ -552,6 +517,12 @@ export default {
 //https://www.jb51.net/article/112937.htm
           var request = require('request');
           var url ='http://127.0.0.1:16111/ysjg';
+          var reqJson ={}
+          reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0"} } } }')
+
+
+          reqJson.Message.Message_Header.externalReferenceNo='10000'
+          console.log('req ' +reqJson)
           var bodyChar = '<Message> <Message_Body> <request>0000</request> <requestMsg>成功</requestMsg> </Message_Body> </Message>';
 
           request({
@@ -588,19 +559,6 @@ export default {
 
 
           });
-
-            // request('http://127.0.0.1:16111/ysjg', function (error, response, body) {
-          //   if (!error && response.statusCode == 200) {
-          //     console.log(body);
-          //     _this.ruleForm.resText = body;
-          //
-          //     _this.scope.row.loading =false;
-          //
-          //   }else {
-          //     console.log('else: '  + body);
-          //   }
-          // })
-
 
         } else {
           console.log('error submit!!');
