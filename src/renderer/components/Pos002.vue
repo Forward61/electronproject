@@ -2,7 +2,7 @@ import {BrowserWindow} from "electron";
 <template>
   <div>
     <el-button type="primary" disabled><router-link id ="Pos001" to="/">Pos应缴资金查询</router-link></el-button>
-    <el-button type="primary" disabled><router-link id ="Pos003" to="/Pos002">Pos冲正确认</router-link></el-button>
+    <el-button type="primary" disabled><router-link id ="Pos003" to="/Pos003">Pos冲正确认</router-link></el-button>
     <el-form style="height:10px;margin:30px">
       <el-form-item label="交易名称" prop="name">
         <el-form-item  >Pos缴存确认</el-form-item>
@@ -570,6 +570,11 @@ import {BrowserWindow} from "electron";
               value: '127.0.0.1',
               label: '本地-127.0.0.1'
 
+            },
+            {
+              value: '118.24.52.46',
+              label: '自己测试用'
+
             }]
         },
         rules: {
@@ -666,7 +671,9 @@ import {BrowserWindow} from "electron";
             // Node.js中的http请求客户端示例(request client)
 //https://www.jb51.net/article/112937.htm
             var request = require('request');
-            var url ='http://127.0.0.1:16111/ysjg';
+            // var url ='http://127.0.0.1:16111/ysjg';
+            var url ='http://'+_this.ruleForm.ip+':16111/ysjg';
+
             var reqJson ={}
             // reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0"} } } }')
             reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001","transactionDate": "0"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')

@@ -504,11 +504,16 @@ export default {
           value: '172.31.207.17',
           label: 'ZSC环境-207.17'
         },
-          {
+        {
             value: '127.0.0.1',
             label: '本地-127.0.0.1'
 
-          }]
+        },
+        {
+            value: '118.24.52.46',
+            label: '自己测试用'
+
+        }]
       },
       rules: {
         areaCode: [
