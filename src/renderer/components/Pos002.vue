@@ -2,7 +2,7 @@ import {BrowserWindow} from "electron";
 <template>
   <div>
     <el-button type="primary" disabled><router-link id ="Pos001" to="/">Pos应缴资金查询</router-link></el-button>
-    <el-button type="primary" disabled><router-link id ="Pos002" to="/Pos002">Pos缴存</router-link></el-button>
+<!--    <el-button type="primary" disabled><router-link id ="Pos002" to="/Pos002">Pos缴存确认</router-link></el-button>-->
 
     <el-button type="success" disabled><router-link id ="tcpclientTool" to="/tcpclient">Http请求不含报文长度</router-link></el-button>
 
@@ -14,7 +14,7 @@ import {BrowserWindow} from "electron";
 
 
       <el-form-item label="交易名称" prop="name">
-        <el-form-item  >Pos应缴资金查询</el-form-item>
+        <el-form-item  >Pos缴存</el-form-item>
 
       </el-form-item>
       <el-form-item label="地区编码" prop="reqText" >
@@ -26,9 +26,7 @@ import {BrowserWindow} from "electron";
       <el-form-item>
         <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">发送</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
-        <el-button type="primary" :loading="scope.row.loading" @click="to()">缴费</el-button>
-
-        <!--        <div><router-link :to="{path:'/Pos002',query:{id:1}}">缴费</router-link></div>-->
+<!--        <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">缴费</el-button>-->
 
       </el-form-item>
 
@@ -467,7 +465,6 @@ export default {
         monAccountNo: '',
         monAccountName: '',
         remark: '',
-        jsonString: '',
         reqText: '',
         resText: '',
         lsh:'',
@@ -511,17 +508,12 @@ export default {
       }
     };
   },
+  props:['jsonString'],
+  mounted(){
+    console.log(this.$route.params.jsonString, this.jsonString)
+    console.log(this.jsonString.Message.Message_Body.response.ownerName)
+  },
   methods: {
-    to(){
-      var _this = this;
-      console.log('to method')
-      this.$router.push({
-        name: 'Pos002',
-        params: {
-          jsonString: _this.ruleForm.jsonString
-        }
-      })
-    },
     submitForm(formName) {
       var _this = this;
       var encoding = require('encoding');
@@ -573,7 +565,6 @@ export default {
                 _this.ruleForm.resText = body;
             _this.ruleForm.resXmlText =showXml(body);
             var jsonObj=xmlObj2json(xmlStr2XmlObj(_this.ruleForm.resXmlText))
-            _this.ruleForm.jsonString = jsonObj;
             console.log('json' + jsonObj)
             console.log('json ownerName    de ' + jsonObj.Message.Message_Body.response.ownerName)
             _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName

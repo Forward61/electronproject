@@ -13,6 +13,15 @@ export default new Router({
 
     },
     {
+      path: '/Pos002/:jsonString',
+
+      name: 'Pos002',
+      props: true,
+
+      component: require('@/components/Pos002').default
+
+    },
+    {
       path: '/httpClient',
 
       name: 'HttpclientTool-page',
