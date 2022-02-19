@@ -26,8 +26,8 @@ import {BrowserWindow} from "electron";
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
 
-      <el-form-item label="业主姓名" prop="ownerNamd" class="" >
-        <pre v-highlight="ruleForm.ownerNamd"><code class="xml"></code></pre>
+      <el-form-item label="业主姓名" prop="ownerName" class="" >
+        <pre v-highlight="ruleForm.ownerName"><code class="xml"></code></pre>
       </el-form-item>
       <el-form-item label="业主证件号码" prop="ownerCardNo" class="" >
         <pre v-highlight="ruleForm.ownerCardNo"><code class="xml"></code></pre>
@@ -39,14 +39,14 @@ import {BrowserWindow} from "electron";
         <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
       </el-form-item>
 
-      <el-form-item label="计划缴款金额" prop="payMoney" class="" >
-        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
+      <el-form-item label="监管账户账号" prop="monAccountNo" class="" >
+        <pre v-highlight="ruleForm.monAccountNo"><code class="xml"></code></pre>
       </el-form-item>
-      <el-form-item label="计划缴款金额" prop="payMoney" class="" >
-        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
+      <el-form-item label="监管账户户名" prop="monAccountName" class="" >
+        <pre v-highlight="ruleForm.monAccountName"><code class="xml"></code></pre>
       </el-form-item>
-      <el-form-item label="计划缴款金额" prop="payMoney" class="" >
-        <pre v-highlight="ruleForm.payMoney"><code class="xml"></code></pre>
+      <el-form-item label="备注" prop="remark" class="" >
+        <pre v-highlight="ruleForm.remark"><code class="xml"></code></pre>
       </el-form-item>
 
 
@@ -384,6 +384,13 @@ export default {
         // jydmLength: '2',
         areaCode: '',
         payCode: '',
+        ownerName: '',
+        ownerCardNo: '',
+        houseAddress: '',
+        payMoney: '',
+        monAccountNo: '',
+        monAccountName: '',
+        remark: '',
         reqText: '',
         resText: '',
         lsh:'',
@@ -471,12 +478,13 @@ export default {
             } else (
                     console.log('else' +body)
             )
+            _this.scope.row.loading =false;
                 _this.ruleForm.resText = body;
             _this.ruleForm.resXmlText =showXml(body);
             var jsonObj=xmlObj2json(xmlStr2XmlObj(_this.ruleForm.resXmlText))
             console.log('json' + jsonObj)
-            console.log('json returnCode' + jsonObj.Message.Message_Body.returnCode)
-            _this.scope.row.loading =false;
+            console.log('json ownerName    de ' + jsonObj.Message.Message_Body.response.ownerName)
+            _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
           });
 
             // request('http://127.0.0.1:16111/ysjg', function (error, response, body) {

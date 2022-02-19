@@ -9,3 +9,5 @@ S
 #src/renderer/store/modules/index.js,4/b/4bb843f14685e4a07f641ae9e09e63b25a2dabc8
 D
 src/renderer/main.js,d/8/d8b0e15d4b4459db03803c517b329527d8cd161d
+D
+src/renderer/App.vue,9/f/9f6f8ee80b3152d28ee8949d75782409abfeed07
