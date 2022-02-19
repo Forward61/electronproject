@@ -24,7 +24,7 @@ import {BrowserWindow} from "electron";
 
       <el-descriptions class="margin-top" title="响应信息" :column="3" :size="size" border>
         <template slot="extra">
-          <el-button type="primary" size="small">操作</el-button>
+<!--          <el-button type="primary" size="small">操作</el-button>-->
         </template>
         <el-descriptions-item>
           <template slot="label" v-highlight="ruleForm.resXmlText">
@@ -94,9 +94,9 @@ import {BrowserWindow} from "electron";
 
 
 
-      <el-form-item label="返回不含头" prop="resXmlText" class="" >
-        <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>
-      </el-form-item>
+<!--      <el-form-item label="返回不含头" prop="resXmlText" class="" >-->
+<!--        <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>-->
+<!--      </el-form-item>-->
       <el-form-item label="服务器返回" prop="resText" class="bg-success" >
         <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
       </el-form-item>
@@ -125,7 +125,7 @@ import {BrowserWindow} from "electron";
       <el-form-item label="发送的报文" prop="fsbw">
         <el-input  v-model="ruleForm.fsbw"></el-input>
       </el-form-item>
-      <el-form-item label="返回不含头" prop="resXmlText" class="" >
+      <el-form-item label="响应报文" prop="resXmlText" class="" >
         <el-input type="textarea" autosize
                   v-model="ruleForm.resXmlText" ></el-input>
       </el-form-item>
@@ -391,6 +391,52 @@ function xmlObj2json(xml) {
     console.log(e.message);
   }
 }
+function getDateString(){
+  var date = new Date();
+
+  var year = date.getFullYear();        //年 ,从 Date 对象以四位数字返回年份
+  var month = date.getMonth() + 1;      //月 ,从 Date 对象返回月份 (0 ~ 11) ,date.getMonth()比实际月份少 1 个月
+  var day = date.getDate();             //日 ,从 Date 对象返回一个月中的某一天 (1 ~ 31)
+
+  var hours = date.getHours();          //小时 ,返回 Date 对象的小时 (0 ~ 23)
+  var minutes = date.getMinutes();      //分钟 ,返回 Date 对象的分钟 (0 ~ 59)
+  var seconds = date.getSeconds();      //秒 ,返回 Date 对象的秒数 (0 ~ 59)
+
+  //获取当前系统时间
+  var currentDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+  // alert(currentDate);
+
+
+  //修改月份格式
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+
+  //修改日期格式
+  if (day >= 0 && day <= 9) {
+    day = "0" + day;
+  }
+
+  //修改小时格式
+  if (hours >= 0 && hours <= 9) {
+    hours = "0" + hours;
+  }
+
+  //修改分钟格式
+  if (minutes >= 0 && minutes <= 9) {
+    minutes = "0" + minutes;
+  }
+
+  //修改秒格式
+  if (seconds >= 0 && seconds <= 9) {
+    seconds = "0" + seconds;
+  }
+
+  //获取当前系统时间  格式(yyyy-mm-dd hh:mm:ss)
+  var currentFormatDate = year + "" + month + "" + day + "" + hours + "" + minutes + "" + seconds;
+  console.log(currentFormatDate)
+  return currentFormatDate;
+}
 /**
  * xml字符串转换json数据
  * @param {Object} xml
@@ -492,6 +538,7 @@ export default {
       var encoding = require('encoding');
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          _this.resetResForm()
           //加载loading 图层
           _this.scope.row.loading =true;
           //验证表单后把返回结果清空，避免超时或者其他返回内容未清空造成使用者误解。
@@ -510,7 +557,6 @@ export default {
 
 
           var reqString = reqHead + reqtxt2utf8;
-          _this.ruleForm.fsbw = reqString;
           console.log("请求字符串" )
           console.log(reqString);
           // Node.js中的http请求客户端示例(request client)
@@ -521,9 +567,15 @@ export default {
           reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0"} } } }')
 
 
-          reqJson.Message.Message_Header.externalReferenceNo='10000'
+          reqJson.Message.Message_Header.externalReferenceNo=getDateString()+randomNum(10000,99999)
+          reqJson.Message.Message_Body.request.areaCode=_this.ruleForm.areaCode
+          reqJson.Message.Message_Body.request.payCode=_this.ruleForm.payCode
+
+
           console.log('req ' +reqJson)
-          var bodyChar = '<Message> <Message_Body> <request>0000</request> <requestMsg>成功</requestMsg> </Message_Body> </Message>';
+          var bodyChar=_this.$x2js.js2xml(reqJson)
+          console.log('bodyChar ' +bodyChar)
+          _this.ruleForm.fsbw = bodyChar;
 
           request({
             url: url,
@@ -531,29 +583,53 @@ export default {
             headers: {
               "content-type": "application/xml",
             },
-            body: bodyChar
+            body: bodyChar,
+
           }, function(error, response, body) {
             if (!error && response.statusCode == 200) {
-              console.log(' '+body) // 请求成功的处理逻辑
+              _this.ruleForm.resXmlText =showXml(body);
+
+              console.log(' ' + body) // 请求成功的处理逻辑
+              var jsonObj=xmlObj2json(xmlStr2XmlObj(_this.ruleForm.resXmlText))
+              _this.ruleForm.jsonString = jsonObj;
+              console.log('json' + jsonObj)
+              console.log('json ownerName    de ' + jsonObj.Message.Message_Body.response.ownerName)
+              var returnCode = jsonObj.Message.Message_Body.response.returnCode
+              var returnMsg = jsonObj.Message.Message_Body.response.returnMsg
+
+              if(returnCode==='0000'){
+                _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
+                _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
+                _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress
+                _this.ruleForm.payMoney=jsonObj.Message.Message_Body.response.payMoney
+                _this.ruleForm.monAccountNo=jsonObj.Message.Message_Body.response.monAccountNo
+                _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
+                _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
+              }else{
+                _this.$alert('响应码' +returnCode+'\n响应流水:'+reqJson.Message.Message_Header.externalReferenceNo, '响应信息'+returnMsg, {
+                  confirmButtonText: '确定'
+
+                })
+              }
+
             } else (
-                    console.log('else' +body)
+                    console.log('else' +body),
+
+            _this.$alert('系统异常', '系统异常', {
+                      confirmButtonText: '确定',
+                      callback: action => {
+                        _this.$message({
+                          type: 'info',
+                          message: `action: ${ action }`
+                        });
+                      }
+                    })
             )
-            var reqjsonObj=xmlObj2json(xmlStr2XmlObj(bodyChar))
-            console.log('req request ' + reqjsonObj.Message.Message_Body.request)
+            // var reqjsonObj=xmlObj2json(xmlStr2XmlObj(bodyChar))
+            // console.log('req request ' + reqjsonObj.Message.Message_Body.request)
             _this.scope.row.loading =false;
                 _this.ruleForm.resText = body;
-            _this.ruleForm.resXmlText =showXml(body);
-            var jsonObj=xmlObj2json(xmlStr2XmlObj(_this.ruleForm.resXmlText))
-            _this.ruleForm.jsonString = jsonObj;
-            console.log('json' + jsonObj)
-            console.log('json ownerName    de ' + jsonObj.Message.Message_Body.response.ownerName)
-            _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
-            _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
-            _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress
-            _this.ruleForm.payMoney=jsonObj.Message.Message_Body.response.payMoney
-            _this.ruleForm.monAccountNo=jsonObj.Message.Message_Body.response.monAccountNo
-            _this.ruleForm.monAccountName=jsonObj.Message.Message_Body.response.monAccountName
-            _this.ruleForm.remark=jsonObj.Message.Message_Body.response.remark
+
 
 
 
@@ -568,6 +644,25 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      var _this = this;
+      _this.ruleForm.ownerName=''
+      _this.ruleForm.ownerCardNo=''
+      _this.ruleForm.houseAddress=''
+      _this.ruleForm.payMoney=''
+      _this.ruleForm.monAccountNo=''
+      _this.ruleForm.monAccountName=''
+      _this.ruleForm.remark=''
+
+    },
+    resetResForm(){
+      var _this = this;
+      _this.ruleForm.ownerName=''
+      _this.ruleForm.ownerCardNo=''
+      _this.ruleForm.houseAddress=''
+      _this.ruleForm.payMoney=''
+      _this.ruleForm.monAccountNo=''
+      _this.ruleForm.monAccountName=''
+      _this.ruleForm.remark=''
     }
   }
 }
