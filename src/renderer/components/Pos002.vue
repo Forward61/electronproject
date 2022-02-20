@@ -539,7 +539,7 @@ import {BrowserWindow} from "electron";
           resText: '',
           lsh:'',
 
-          ip: '127.0.0.1',
+          ip: '172.31.207.15',
           port: '16111',
           fsbw: '',
           resXmlText: '',
@@ -620,6 +620,8 @@ import {BrowserWindow} from "electron";
 
       console.log('xml2json  ' + _this.$x2js.js2xml(this.jsonString))
       var jsonObj = this.jsonString
+      console.log('ip   :' + jsonObj.ip)
+
       _this.ruleForm.areaCode=jsonObj.Message.Message_Body.response.areaCode
       _this.ruleForm.payCode=jsonObj.Message.Message_Body.response.payCode
 
@@ -690,7 +692,6 @@ import {BrowserWindow} from "electron";
             reqJson.Message.Message_Body.request.clientNo=_this.ruleForm.clientNo
             reqJson.Message.Message_Body.request.systemNo=_this.ruleForm.systemNo
             reqJson.Message.Message_Body.request.channelSeq=_this.ruleForm.channelSeq
-
 
             console.log('req ' +reqJson)
             var bodyChar=_this.$x2js.js2xml(reqJson)

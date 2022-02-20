@@ -486,7 +486,7 @@ export default {
         resText: '',
         lsh:'',
 
-        ip: '127.0.0.1',
+        ip: '172.31.207.15',
         port: '16111',
         fsbw: '',
         resXmlText: '',
@@ -602,7 +602,9 @@ export default {
               console.log(' ' + body) // 请求成功的处理逻辑
               var jsonObj=xmlObj2json(xmlStr2XmlObj(_this.ruleForm.resXmlText))
               _this.ruleForm.jsonString = jsonObj;
-              console.log('json' + jsonObj)
+              _this.ruleForm.jsonString.ip = _this.ruleForm.ip
+
+                console.log('json' + jsonObj)
               console.log('json ownerName    de ' + jsonObj.Message.Message_Body.response.ownerName)
               var returnCode = jsonObj.Message.Message_Body.response.returnCode
               var returnMsg = jsonObj.Message.Message_Body.response.returnMsg

@@ -416,7 +416,7 @@ export default {
         resText: '',
         lsh:'',
 
-        ip: '127.0.0.1',
+        ip: '172.31.207.15',
         port: '16111',
         fsbw: '',
         resXmlText: '',
