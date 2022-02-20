@@ -3,12 +3,38 @@ import {BrowserWindow} from "electron";
   <div>
     <el-button type="primary" disabled><router-link id ="Pos001" to="/">Pos应缴资金查询</router-link></el-button>
     <el-button type="primary" disabled><router-link id ="Pos003" to="/Pos003">Pos冲正确认</router-link></el-button>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form style=""  label-width="80px">
+          <el-form-item label="交易名称" prop="name">
+              <el-form-item  >Pos应缴资金查询</el-form-item>
 
-      <el-form-item label="交易名称" prop="name">
-        <el-form-item  >Pos应缴资金查询</el-form-item>
+          </el-form-item>
+          <el-row>
 
-      </el-form-item>
+          <el-col :span="6">
+              <el-form-item label="ip" prop="ip">
+                  <el-select v-model="ruleForm.ip" placeholder="请选择" @change="changeIp()">
+                      <el-option
+                              v-for="item in ruleForm.options"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                      </el-option>
+                  </el-select>
+
+              </el-form-item>
+          </el-col>
+          <el-col :span="6">
+              <el-form-item label="端口" prop="port">
+                  <el-input @blur="changePort()" v-model="ruleForm.port"></el-input>
+              </el-form-item>
+          </el-col>
+
+        </el-row>
+
+      </el-form>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+
+
       <el-form-item label="地区编码" prop="areaCode" >
         <el-input type="textarea" autosize v-model="ruleForm.areaCode"></el-input>
       </el-form-item>
@@ -94,34 +120,31 @@ import {BrowserWindow} from "electron";
 
 
 
-<!--      <el-form-item label="返回不含头" prop="resXmlText" class="" >-->
-<!--        <pre v-highlight="ruleForm.resXmlText"><code class="xml"></code></pre>-->
-<!--      </el-form-item>-->
       <el-form-item label="服务器返回" prop="resText" class="bg-success" >
         <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
       </el-form-item>
 
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="ip" prop="ip">
-            <el-select v-model="ruleForm.ip" placeholder="请选择">
-              <el-option
-                  v-for="item in ruleForm.options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="ip" prop="ip">-->
+<!--            <el-select v-model="ruleForm.ip" placeholder="请选择" @change="changeIp()">-->
+<!--              <el-option-->
+<!--                  v-for="item in ruleForm.options"-->
+<!--                  :key="item.value"-->
+<!--                  :label="item.label"-->
+<!--                  :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
 
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="端口" prop="port">
-            <el-input  v-model="ruleForm.port"></el-input>
-          </el-form-item>
-        </el-col>
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="端口" prop="port">-->
+<!--            <el-input  v-model="ruleForm.port"></el-input>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
 
-      </el-row>
+<!--      </el-row>-->
       <el-form-item label="发送的报文" prop="fsbw">
         <el-input  v-model="ruleForm.fsbw"></el-input>
       </el-form-item>
@@ -455,7 +478,7 @@ export default {
     return {
       scope: {
         row:{
-          loading: false
+        loading: false
         }
       },
       size: '',
@@ -527,6 +550,18 @@ export default {
       }
     };
   },
+  mounted() {
+
+    var _this = this;
+    if(this.GLOBAL.ipoptions.ip===''||this.GLOBAL.ipoptions.ip===undefined){
+        console.log('我是空')
+    }else{
+        console.log('我是值 '+ this.GLOBAL.ipoptions.ip)
+        _this.ruleForm.ip = this.GLOBAL.ipoptions.ip
+        _this.ruleForm.port = this.GLOBAL.ipoptions.port
+    }
+
+  },
   methods: {
     to(){
       var _this = this;
@@ -572,7 +607,7 @@ export default {
           // Node.js中的http请求客户端示例(request client)
 //https://www.jb51.net/article/112937.htm
           var request = require('request');
-          var url ='http://'+_this.ruleForm.ip+':16111/ysjg';
+          var url ='http://'+_this.ruleForm.ip+':'+_this.ruleForm.port+'/ysjg';
           var reqJson ={}
           reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
 
@@ -675,7 +710,21 @@ export default {
       _this.ruleForm.monAccountNo=''
       _this.ruleForm.monAccountName=''
       _this.ruleForm.remark=''
-    }
+    },
+      changeIp(){
+        var _this = this;
+        this.GLOBAL.ipoptions.ip = _this.ruleForm.ip
+        this.GLOBAL.ipoptions.port = _this.ruleForm.port
+          console.log('gb ip ' +  this.GLOBAL.ipoptions.ip)
+          console.log('gb port ' + this.GLOBAL.ipoptions.port)
+      },
+      changePort(){
+          var _this = this;
+          this.GLOBAL.ipoptions.ip = _this.ruleForm.ip
+          this.GLOBAL.ipoptions.port = _this.ruleForm.port
+          console.log('gb ip ' +  this.GLOBAL.ipoptions.ip)
+          console.log('gb port ' + this.GLOBAL.ipoptions.port)
+      }
   }
 }
 </script>

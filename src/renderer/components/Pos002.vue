@@ -3,12 +3,44 @@ import {BrowserWindow} from "electron";
   <div>
     <el-button type="primary" disabled><router-link id ="Pos001" to="/">Pos应缴资金查询</router-link></el-button>
     <el-button type="primary" disabled><router-link id ="Pos003" to="/Pos003">Pos冲正确认</router-link></el-button>
-    <el-form style="height:10px;margin:30px">
+
+    <el-form style=""  label-width="80px">
       <el-form-item label="交易名称" prop="name">
         <el-form-item  >Pos缴存确认</el-form-item>
-        <br/>
+
       </el-form-item>
+      <el-row>
+
+        <el-col :span="6">
+          <el-form-item label="ip" prop="ip">
+            <el-select v-model="ruleForm.ip" placeholder="请选择" @change="changeIp()">
+              <el-option
+                      v-for="item in ruleForm.options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+              </el-option>
+            </el-select>
+
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="端口" prop="port">
+            <el-input @blur="changePort()"  v-model="ruleForm.port"></el-input>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+
     </el-form>
+
+
+<!--    <el-form style="height:10px;margin:30px">-->
+<!--      <el-form-item label="交易名称" prop="name">-->
+<!--        <el-form-item  >Pos缴存确认</el-form-item>-->
+<!--        <br/>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
     <el-form  :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
 
       <el-form-item label="渠道交易日期" prop="transactionDate" >
@@ -155,24 +187,7 @@ import {BrowserWindow} from "electron";
 
           </el-form-item>
         </el-col>
-<!--        <el-col :span="6">-->
-<!--          <el-form-item label="ip" prop="ip">-->
-<!--            <el-select v-model="ruleForm.ip" placeholder="请选择">-->
-<!--              <el-option-->
-<!--                      v-for="item in ruleForm.options"-->
-<!--                      :key="item.value"-->
-<!--                      :label="item.label"-->
-<!--                      :value="item.value">-->
-<!--              </el-option>-->
-<!--            </el-select>-->
 
-<!--          </el-form-item>-->
-<!--        </el-col>-->
-<!--        <el-col :span="20">-->
-<!--          <el-form-item label="端口" prop="port">-->
-<!--            <el-input  v-model="ruleForm.port"></el-input>-->
-<!--          </el-form-item>-->
-<!--        </el-col>-->
 
       </el-row>
       <el-form-item label="发送的报文" prop="fsbw">
@@ -617,6 +632,17 @@ import {BrowserWindow} from "electron";
       console.log(this.$route.params.jsonString, this.jsonString)
       console.log(this.jsonString.Message.Message_Body.response.ownerName)
       var _this = this;
+      if(this.GLOBAL.ipoptions.ip===''||this.GLOBAL.ipoptions.ip===undefined){
+        console.log('我是空')
+      }else{
+        console.log('我是值 '+ this.GLOBAL.ipoptions.ip + this.GLOBAL.ipoptions.port)
+        _this.ruleForm.ip = this.GLOBAL.ipoptions.ip
+        _this.ruleForm.port = this.GLOBAL.ipoptions.port
+      }
+      // _this.ruleForm.ip = this.GLOBAL.ipoptions.ip
+      // _this.ruleForm.port = this.GLOBAL.ipoptions.port
+
+      console.log('_this.ruleForm.ip '+ _this.ruleForm.ip)
 
       console.log('xml2json  ' + _this.$x2js.js2xml(this.jsonString))
       var jsonObj = this.jsonString
@@ -784,6 +810,21 @@ import {BrowserWindow} from "electron";
         _this.ruleForm.systemNo=''
         _this.ruleForm.channelSeq=''
 
+      },
+      changeIp(){
+
+        var _this = this;
+        this.GLOBAL.ipoptions.ip = _this.ruleForm.ip
+        this.GLOBAL.ipoptions.port = _this.ruleForm.port
+        console.log('gb ip ' +  this.GLOBAL.ipoptions.ip)
+        console.log('gb port ' + this.GLOBAL.ipoptions.port)
+      },
+      changePort(){
+        var _this = this;
+        this.GLOBAL.ipoptions.ip = _this.ruleForm.ip
+        this.GLOBAL.ipoptions.port = _this.ruleForm.port
+        console.log('gb ip ' +  this.GLOBAL.ipoptions.ip)
+        console.log('gb port ' + this.GLOBAL.ipoptions.port)
       }
     }
   }

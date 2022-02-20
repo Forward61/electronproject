@@ -3,12 +3,42 @@ import {BrowserWindow} from "electron";
   <div>
     <el-button type="primary" disabled><router-link id ="Pos001" to="/">Pos应缴资金查询</router-link></el-button>
     <el-button type="primary" disabled><router-link id ="Pos003" to="/Pos003">Pos冲正确认</router-link></el-button>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-
+    <el-form style=""  label-width="100px">
       <el-form-item label="交易名称" prop="name">
         <el-form-item  >Pos冲正确认</el-form-item>
 
       </el-form-item>
+      <el-row>
+
+        <el-col :span="6">
+          <el-form-item label="ip" prop="ip">
+            <el-select v-model="ruleForm.ip" placeholder="请选择" @change="changeIp()">
+              <el-option
+                      v-for="item in ruleForm.options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+              </el-option>
+            </el-select>
+
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="端口" prop="port">
+            <el-input @blur="changePort()"  v-model="ruleForm.port"></el-input>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+
+    </el-form>
+
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+
+<!--      <el-form-item label="交易名称" prop="name">-->
+<!--        <el-form-item  >Pos冲正确认</el-form-item>-->
+
+<!--      </el-form-item>-->
       <el-form-item label="原交易流水号" prop="channelSeq" >
         <el-input type="textarea" autosize v-model="ruleForm.channelSeq"></el-input>
       </el-form-item>
@@ -28,27 +58,27 @@ import {BrowserWindow} from "electron";
         <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
       </el-form-item>
 
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="ip" prop="ip">
-            <el-select v-model="ruleForm.ip" placeholder="请选择">
-              <el-option
-                  v-for="item in ruleForm.options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+<!--      <el-row>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="ip" prop="ip">-->
+<!--            <el-select v-model="ruleForm.ip" placeholder="请选择">-->
+<!--              <el-option-->
+<!--                  v-for="item in ruleForm.options"-->
+<!--                  :key="item.value"-->
+<!--                  :label="item.label"-->
+<!--                  :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
 
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="端口" prop="port">
-            <el-input  v-model="ruleForm.port"></el-input>
-          </el-form-item>
-        </el-col>
+<!--          </el-form-item>-->
+<!--        </el-col>-->
+<!--        <el-col :span="8">-->
+<!--          <el-form-item label="端口" prop="port">-->
+<!--            <el-input  v-model="ruleForm.port"></el-input>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
 
-      </el-row>
+<!--      </el-row>-->
       <el-form-item label="发送的报文" prop="fsbw">
         <el-input  v-model="ruleForm.fsbw"></el-input>
       </el-form-item>
@@ -461,7 +491,23 @@ export default {
       }
     };
   },
-  methods: {
+  mounted() {
+    var _this = this;
+
+    if(this.GLOBAL.ipoptions.ip===''||this.GLOBAL.ipoptions.ip===undefined){
+      console.log('我是空')
+    }else{
+      console.log('我是值 '+ this.GLOBAL.ipoptions.ip)
+      _this.ruleForm.ip = this.GLOBAL.ipoptions.ip
+      _this.ruleForm.port = this.GLOBAL.ipoptions.port
+    }
+    // console.log(this.$route.params.jsonString, this.jsonString)
+    // console.log(this.jsonString.Message.Message_Body.response.ownerName)
+    // var _this = this;
+    // _this.ruleForm.ip = this.GLOBAL.ipoptions.ip
+    // _this.ruleForm.port = this.GLOBAL.ipoptions.port
+  },
+    methods: {
     to(){
       var _this = this;
       if(_this.ruleForm.jsonString===''){
@@ -617,7 +663,21 @@ export default {
       _this.ruleForm.monAccountNo=''
       _this.ruleForm.monAccountName=''
       _this.ruleForm.remark=''
-    }
+    },
+      changeIp(){
+        var _this = this;
+        this.GLOBAL.ipoptions.ip = _this.ruleForm.ip
+        this.GLOBAL.ipoptions.port = _this.ruleForm.port
+        console.log('gb ip ' +  this.GLOBAL.ipoptions.ip)
+        console.log('gb port ' + this.GLOBAL.ipoptions.port)
+      },
+        changePort(){
+            var _this = this;
+            this.GLOBAL.ipoptions.ip = _this.ruleForm.ip
+            this.GLOBAL.ipoptions.port = _this.ruleForm.port
+            console.log('gb ip ' +  this.GLOBAL.ipoptions.ip)
+            console.log('gb port ' + this.GLOBAL.ipoptions.port)
+        }
   }
 }
 </script>
