@@ -628,10 +628,10 @@ export default {
             _this.$alert('系统异常', '系统异常', {
                       confirmButtonText: '确定',
                       callback: action => {
-                        _this.$message({
-                          type: 'info',
-                          message: `action: ${ action }`
-                        });
+                        // _this.$message({
+                        //   type: 'info',
+                        //   message: `action: ${ action }`
+                        // });
                       }
                     })
             )

@@ -508,7 +508,7 @@ export default {
           var request = require('request');
           var url ='http://'+_this.ruleForm.ip+':16111/ysjg';
           var reqJson ={}
-          reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"channelSeq": "05", "channelDate": "0","systemNo": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
+          reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0003"}, "Message_Body": {"request": {"channelSeq": "05", "channelDate": "0","systemNo": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
 
 
           reqJson.Message.Message_Header.externalReferenceNo=getDateString()+randomNum(10000,99999)
@@ -572,10 +572,10 @@ export default {
             _this.$alert('系统异常', '系统异常', {
                       confirmButtonText: '确定',
                       callback: action => {
-                        _this.$message({
-                          type: 'info',
-                          message: `action: ${ action }`
-                        });
+                        // _this.$message({
+                        //   type: 'info',
+                        //   message: `action: ${ action }`
+                        // });
                       }
                     })
             )

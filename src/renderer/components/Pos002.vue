@@ -676,7 +676,7 @@ import {BrowserWindow} from "electron";
 
             var reqJson ={}
             // reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0"} } } }')
-            reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001","transactionDate": "0"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
+            reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0003","transactionDate": "0"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
 
             reqJson.Message.Message_Header.transactionDate=_this.ruleForm.transactionDate
             reqJson.Message.Message_Header.externalReferenceNo=getDateString()+randomNum(10000,99999)
@@ -742,10 +742,10 @@ import {BrowserWindow} from "electron";
                               _this.$alert('系统异常', '系统异常', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                  _this.$message({
-                                    type: 'info',
-                                    message: `action: ${ action }`
-                                  });
+                                  // _this.$message({
+                                  //   type: 'info',
+                                  //   message: `action: ${ action }`
+                                  // });
                                 }
                               })
               )
