@@ -83,7 +83,7 @@ import {BrowserWindow} from "electron";
         </template>
         <el-descriptions-item>
           <template slot="label" v-highlight="ruleForm.resXmlText">
-            <i class="el-icon-user"></i>
+            <i class="el-icon-place"></i>
             地区编码
           </template>
 
@@ -109,7 +109,7 @@ import {BrowserWindow} from "electron";
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
+            <i class="el-icon-tickets"></i>
             业主证件号码
           </template>
           <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
@@ -123,19 +123,26 @@ import {BrowserWindow} from "electron";
           <span>{{ ruleForm.houseAddress}}</span>
 
         </el-descriptions-item>
-
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
-            业主证件号码
+            <i class="el-icon-s-custom"></i>
+            监管账户户名
           </template>
           <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
-          <span>{{ ruleForm.ownerCardNo}}</span>
+          <span>{{ ruleForm.monAccountName}}</span>
         </el-descriptions-item>
+<!--        <el-descriptions-item>-->
+<!--          <template slot="label">-->
+<!--            <i class="el-icon-mobile-phone"></i>-->
+<!--            业主证件号码-->
+<!--          </template>-->
+<!--          &lt;!&ndash;          <el-input  v-model="ruleForm.ownerName"  ></el-input>&ndash;&gt;-->
+<!--          <span>{{ ruleForm.ownerCardNo}}</span>-->
+<!--        </el-descriptions-item>-->
 
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
+            <i class="el-icon-s-finance"></i>
             计划缴款金额
           </template>
           <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
@@ -144,7 +151,7 @@ import {BrowserWindow} from "electron";
 
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
+            <i class="el-icon-bank-card"></i>
             监管账户账号
           </template>
           <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
@@ -153,7 +160,7 @@ import {BrowserWindow} from "electron";
 
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-tickets"></i>
+            <i class="el-icon-notebook-2"></i>
             备注
           </template>
           <span>{{ ruleForm.remark}}</span>
@@ -173,23 +180,23 @@ import {BrowserWindow} from "electron";
         <el-input  v-model="ruleForm.resText" :disabled=true></el-input>
       </el-form-item>
 
-      <el-row>
-        <el-col :span="6">
-          <el-form-item label="ip" prop="ip">
-            <el-select v-model="ruleForm.ip" placeholder="请选择">
-              <el-option
-                      v-for="item in ruleForm.options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
+<!--      <el-row>-->
+<!--        <el-col :span="6">-->
+<!--          <el-form-item label="ip" prop="ip">-->
+<!--            <el-select v-model="ruleForm.ip" placeholder="请选择">-->
+<!--              <el-option-->
+<!--                      v-for="item in ruleForm.options"-->
+<!--                      :key="item.value"-->
+<!--                      :label="item.label"-->
+<!--                      :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
 
-          </el-form-item>
-        </el-col>
+<!--          </el-form-item>-->
+<!--        </el-col>-->
 
 
-      </el-row>
+<!--      </el-row>-->
       <el-form-item label="发送的报文" prop="fsbw">
         <el-input  v-model="ruleForm.fsbw"></el-input>
       </el-form-item>
@@ -562,10 +569,10 @@ import {BrowserWindow} from "electron";
           realFeeName:'',
           realFeeBank:'',
           realFeeCard:'',
-          feeType:'',
-          tradeTime:'',
-          clientNo:'',
-          systemNo:'',
+          feeType:'1',
+          tradeTime:'20220221101659',
+          clientNo:'1101110',
+          systemNo:'1101110',
           channelSeq:'',
           transactionDate: '',
           options: [{
@@ -700,11 +707,11 @@ import {BrowserWindow} from "electron";
 //https://www.jb51.net/article/112937.htm
             var request = require('request');
             // var url ='http://127.0.0.1:16111/ysjg';
-            var url ='http://'+_this.ruleForm.ip+':16111/ysjg';
+            var url ='http://'+_this.ruleForm.ip+':16111/ysjg/';
 
             var reqJson ={}
             // reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0"} } } }')
-            reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0003","transactionDate": "0"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
+            reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0002","transactionDate": "0","channel": "POS","transactionBranch": "70001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" , "monAccountNo": "0", "payMoney": "0", "ownerName": "0", "houseAddress": "0", "ownerCardNo": "0", "monAccountName": "0", "remark": "0"} } } }')
 
             reqJson.Message.Message_Header.transactionDate=_this.ruleForm.transactionDate
             reqJson.Message.Message_Header.externalReferenceNo=getDateString()+randomNum(10000,99999)
@@ -718,6 +725,15 @@ import {BrowserWindow} from "electron";
             reqJson.Message.Message_Body.request.clientNo=_this.ruleForm.clientNo
             reqJson.Message.Message_Body.request.systemNo=_this.ruleForm.systemNo
             reqJson.Message.Message_Body.request.channelSeq=_this.ruleForm.channelSeq
+            reqJson.Message.Message_Body.request.payMoney=_this.ruleForm.payMoney
+            reqJson.Message.Message_Body.request.monAccountNo=_this.ruleForm.monAccountNo
+
+            reqJson.Message.Message_Body.request.ownerName=_this.ruleForm.ownerName
+            reqJson.Message.Message_Body.request.ownerCardNo=_this.ruleForm.ownerCardNo
+            reqJson.Message.Message_Body.request.houseAddress=_this.ruleForm.houseAddress
+            reqJson.Message.Message_Body.request.monAccountName=_this.ruleForm.monAccountName
+            reqJson.Message.Message_Body.request.remark=_this.ruleForm.remark
+
 
             console.log('req ' +reqJson)
             var bodyChar=_this.$x2js.js2xml(reqJson)
@@ -749,6 +765,7 @@ import {BrowserWindow} from "electron";
                     confirmButtonText: '确定'
 
                   })
+                  _this.ruleForm.channelSeq=''
                   // _this.ruleForm.ownerName=jsonObj.Message.Message_Body.response.ownerName
                   // _this.ruleForm.ownerCardNo=jsonObj.Message.Message_Body.response.ownerCardNo
                   // _this.ruleForm.houseAddress=jsonObj.Message.Message_Body.response.houseAddress

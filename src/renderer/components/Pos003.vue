@@ -33,7 +33,7 @@ import {BrowserWindow} from "electron";
 
     </el-form>
 
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
 
 <!--      <el-form-item label="交易名称" prop="name">-->
 <!--        <el-form-item  >Pos冲正确认</el-form-item>-->
@@ -49,7 +49,7 @@ import {BrowserWindow} from "electron";
             <el-input type="textarea" autosize v-model="ruleForm.systemNo"></el-input>
         </el-form-item>
       <el-form-item>
-        <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">查询</el-button>
+        <el-button type="primary" :loading="scope.row.loading" @click="submitForm('ruleForm')">冲正</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
 
       </el-form-item>
@@ -552,7 +552,7 @@ export default {
           // Node.js中的http请求客户端示例(request client)
 //https://www.jb51.net/article/112937.htm
           var request = require('request');
-          var url ='http://'+_this.ruleForm.ip+':16111/ysjg';
+          var url ='http://'+_this.ruleForm.ip+':16111/ysjg/';
           var reqJson ={}
           reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0003"}, "Message_Body": {"request": {"channelSeq": "05", "channelDate": "0","systemNo": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
 

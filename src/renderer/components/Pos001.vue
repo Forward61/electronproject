@@ -63,7 +63,7 @@ import {BrowserWindow} from "electron";
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
+            <i class="el-icon-tickets"></i>
             业主证件号码
           </template>
 <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
@@ -72,24 +72,24 @@ import {BrowserWindow} from "electron";
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-location-outline"></i>
-            房屋地址
+            房屋坐落
           </template>
           <span>{{ ruleForm.houseAddress}}</span>
 
         </el-descriptions-item>
 
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
-            业主证件号码
-          </template>
-          <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
-          <span>{{ ruleForm.ownerCardNo}}</span>
-        </el-descriptions-item>
+<!--        <el-descriptions-item>-->
+<!--          <template slot="label">-->
+<!--            <i class="el-icon-mobile-phone"></i>-->
+<!--            业主证件号码-->
+<!--          </template>-->
+<!--          &lt;!&ndash;          <el-input  v-model="ruleForm.ownerName"  ></el-input>&ndash;&gt;-->
+<!--          <span>{{ ruleForm.ownerCardNo}}</span>-->
+<!--        </el-descriptions-item>-->
 
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
+            <i class="el-icon-s-finance"></i>
             计划缴款金额
           </template>
           <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
@@ -98,16 +98,23 @@ import {BrowserWindow} from "electron";
 
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-mobile-phone"></i>
+            <i class="el-icon-bank-card"></i>
             监管账户账号
           </template>
           <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
           <span>{{ ruleForm.monAccountNo}}</span>
         </el-descriptions-item>
-
+          <el-descriptions-item>
+              <template slot="label">
+                  <i class="el-icon-s-custom"></i>
+                  监管账户户名
+              </template>
+              <!--          <el-input  v-model="ruleForm.ownerName"  ></el-input>-->
+              <span>{{ ruleForm.monAccountName}}</span>
+          </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            <i class="el-icon-tickets"></i>
+            <i class="el-icon-notebook-2"></i>
             备注
           </template>
           <span>{{ ruleForm.remark}}</span>
@@ -607,7 +614,7 @@ export default {
           // Node.js中的http请求客户端示例(request client)
 //https://www.jb51.net/article/112937.htm
           var request = require('request');
-          var url ='http://'+_this.ruleForm.ip+':'+_this.ruleForm.port+'/ysjg';
+          var url ='http://'+_this.ruleForm.ip+':'+_this.ruleForm.port+'/ysjg/';
           var reqJson ={}
           reqJson = JSON.parse('{"Message": {"Message_Header": {"externalReferenceNo": "1", "toServiceCode": "PYPOS0001"}, "Message_Body": {"request": {"areaCode": "05", "payCode": "0","realFeeName": "0", "realFeeBank": "0", "realFeeCard": "0", "feeType": "0", "tradeTime": "0", "clientNo": "0", "systemNo": "0", "channelSeq": "0" } } } }')
 
