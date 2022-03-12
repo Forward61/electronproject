@@ -6,8 +6,8 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
 
+      path: '/Pos001',
       name: 'Pos001-page',
       component: require('@/components/Pos001').default
 
@@ -48,9 +48,6 @@ export default new Router({
       component: require('@/components/LimitPage').default
     },
     {
-      path: '*',
-      redirect: '/'
-    },{
       path:'/balanceReq',
       name: 'balance-page',
       component: require('@/components/BalancePage').default
@@ -62,6 +59,11 @@ export default new Router({
       path:'/unfreezeReq',
       name: 'unfreezeReq-page',
       component: require('@/components/UnfreezePage').default
+
+    },{
+      path:'/',
+      name: '7001-page',
+      component: require('@/components/7001Page').default
     }
   ]
 })
