@@ -206,43 +206,73 @@ import {BrowserWindow} from "electron";
             };
         },
         mounted() {
+          var _this = this;
+
+              // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
+
+
+              var request = require('request');
+              var qs = require('querystring');
+
+              var post_data = {conent: 123};//这是需要提交的数据
+              var content = _this.ruleForm.jgzh;
+
+
+              console.log("content:", content);
+              // console.log("\n");
+
+
+              var enurl = encodeURIComponent('中三ss4')
+              console.log(enurl)
+              request({
+                url:  'http://localhost:9527/py/textReader?content=' + enurl+'&code=7001&program=wz',
+                method: "post"
+                // ,
+                // headers: {
+                //   "content-type": "application/json",
+                // }
+                // ,
+                // body: content
+
+              }, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                  console.log(response)
+                  _this.ruleForm.jgzh=response.body
+                } else {
+                  console.log('error了' + error)
+                }
+              })
 
 
 
 
-          var _this=this;
-          console.log('this http  ' + _this.$http)
-          _this.$http.get("http://www.ifreedom61.xyz/img/d.html").then(function (response){
-            console.log(response.data)
-            _this.ruleForm.jgzh=response.data
-
-            console.log("get请求",_this.ruleForm.jgzh);
-            console.log('this.$fs '+_this.$fs)
-            console.log('this.fs' + _this.fs)
-            _this.$fs.writeFile('fs.txt', '我是新写入的内容', function (err) {
-              if (err) console.error(err);
-              console.log('数据写入的数据');
-            });
-          }).catch(function(error){
-            console.log('res error ' + error)
-            // _this.ruleForm.jgzh=response.data
-
-            console.log(error);
-          });
 
 
 
-          // var _this =this
-          // _this.ruleForm.jgzh='读取中'
-          // //创建文件夹目录
-          // console.log('this.path '+_this.path)
-          // var dirPath = _this.path.join('..', "file");
-          // if (!fs.existsSync(dirPath)) {
-          //   fs.mkdirSync(dirPath);
-          //   console.log("文件夹创建成功");
-          // } else {
-          //   console.log("文件夹已存在");
-          // }
+          // 用Nginx反向代理获取文件具体内容
+          // var _this=this;
+          // console.log('this http  ' + _this.$http)
+          // _this.$http.get("http://www.ifreedom61.xyz/img/d.html").then(function (response){
+          //   console.log(response.data)
+          //   _this.ruleForm.jgzh=response.data
+          //
+          //   console.log("get请求",_this.ruleForm.jgzh);
+          //   console.log('this.$fs '+_this.$fs)
+          //   console.log('this.fs' + _this.fs)
+          //   _this.$fs.writeFile('fs.txt', '我是新写入的内容', function (err) {
+          //     if (err) console.error(err);
+          //     console.log('数据写入的数据');
+          //   });
+          // }).catch(function(error){
+          //   console.log('res error ' + error)
+          //   // _this.ruleForm.jgzh=response.data
+          //
+          //   console.log(error);
+          // });
+
+
+
+
         },
         methods: {
           upload(formName) {
@@ -261,13 +291,12 @@ import {BrowserWindow} from "electron";
 
                 console.log("content:",content);
                 // console.log("\n");
-                var url='http://localhost:8080/py/textUpload'
 
 
                 var enurl= encodeURIComponent(content)
                 console.log(enurl)
                 request({
-                  url: 'http://localhost:8080/py/textUpload?content='+enurl,
+                  url: 'http://localhost:9527/py/textUpload?content='+enurl+'&code=7001&program=wz',
                   method: "post",
                   headers: {
                     "content-type": "application/json",
