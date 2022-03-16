@@ -1,38 +1,53 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
-        <el-button type="primary" disabled><router-link id ="limitReq" to="/">监管机构限制监管账户确认</router-link></el-button>
+        <el-button type="primary" disabled><router-link id ="limitReq" to="/">挡板——梧州应缴资金查询响应</router-link></el-button>
         <el-button type="success" disabled><router-link id ="balanceReq" to="/balanceReq">余额查询</router-link></el-button>
         <el-button type="primary" disabled><router-link id ="stateReq" to="/stateReq">监管状态告知</router-link></el-button>
         <el-button type="success" disabled><router-link id ="unfreezeReq" to="/unfreezeReq">监管机构解除监管账户限制确认</router-link></el-button>
 
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="交易名称" prop="name">
-            <el-form-item v-model="ruleForm.name" >监管机构解除监管账户限制确认</el-form-item>
+            <el-form-item v-model="ruleForm.name" >挡板——梧州应缴资金查询响应</el-form-item>
 
         </el-form-item>
 
-        <el-form-item label="监管账户名称" prop="jgzhmc">
-            <el-input v-model="ruleForm.jgzhmc"></el-input>
+        <el-form-item label="返回码" prop="fhm">
+            <el-input v-model="ruleForm.fhm"></el-input>
         </el-form-item>
 
 
-        <el-form-item label="监管账户" prop="jgzh">
-            <el-input  v-model="ruleForm.jgzh"></el-input>
+        <el-form-item label="缴款编号" prop="jkbh">
+            <el-input  v-model="ruleForm.jkbh"></el-input>
         </el-form-item>
-        <el-form-item label="中心操作员" prop="zxczy">
-            <el-input  v-model="ruleForm.zxczy"></el-input>
-        </el-form-item>
-<!--        <el-form-item label="流水号" prop="lsh">-->
-<!--            <el-input  v-model="ruleForm.lsh"></el-input>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="限制时间" prop="xzsj">-->
-<!--            <el-input  v-model="ruleForm.xzsj"></el-input>-->
-<!--        </el-form-item>-->
-        <el-form-item label="限制说明" prop="xzsm">
-            <el-input  v-model="ruleForm.xzsm"></el-input>
+        <el-form-item label="缴款账号" prop="jkzh">
+            <el-input  v-model="ruleForm.jkzh"></el-input>
         </el-form-item>
 
+        <el-form-item label="监管银行名称" prop="jgyhmc">
+            <el-input  v-model="ruleForm.jgyhmc"></el-input>
+        </el-form-item>
+          <el-form-item label="开发企业名称" prop="kfqymc">
+            <el-input  v-model="ruleForm.kfqymc"></el-input>
+          </el-form-item>
+          <el-form-item label="缴款类型" prop="jklx">
+            <el-input  v-model="ruleForm.jklx"></el-input>
+          </el-form-item>
+          <el-form-item label="缴款金额" prop="jkje">
+            <el-input  v-model="ruleForm.jkje"></el-input>
+          </el-form-item>
+          <el-form-item label="购房人名称" prop="gfrmc">
+            <el-input  v-model="ruleForm.gfrmc"></el-input>
+          </el-form-item>
+          <el-form-item label="购房人证件" prop="gfrzj">
+            <el-input  v-model="ruleForm.gfrzj"></el-input>
+          </el-form-item>
+          <el-form-item label="合同编号" prop="htbh">
+            <el-input  v-model="ruleForm.htbh"></el-input>
+          </el-form-item>
+          <el-form-item label="房屋坐落" prop="fwzl">
+            <el-input  v-model="ruleForm.fwzl"></el-input>
+          </el-form-item>
 
 
 
@@ -73,7 +88,13 @@ import {BrowserWindow} from "electron";
     };
     function getRealLengthReqString(str,length) {
         if (str.length > length||getLength(str)>length){
-            alert(str +"的值超长了！");
+            alert(str +"的值超长了！注意1个中文占两个字节！");
+          throw new Error(str +"的值超长了！注意1个中文占两个字节！");
+
+
+          return
+          // return str.subCHString(0,length)
+
         }else
         {
             var strlenth= getLength(str);
@@ -131,8 +152,47 @@ import {BrowserWindow} from "electron";
         var newTime = format.replace(/YYYY/g,year) .replace(/MM/g,preArr[month]||month) .replace(/DD/g,preArr[day]||day) .replace(/hh/g,preArr[hour]||hour) .replace(/mm/g,preArr[min]||min) .replace(/ss/g,preArr[sec]||sec);
         return newTime;
     }
+    function rtrim(str){  //删除右边的空格
+      return str.replace(/(\s*$)/g,"");
+    }
+    //判断某个字符是否是汉字
+    String.prototype.isCHS = function(i){
+      if (this.charCodeAt(i) > 255 || this.charCodeAt(i) < 0)
+        return true;
+      else
+        return false;
+    };
 
-            export default {
+    //将字符串拆成字符，并存到数组中
+    String.prototype.strToCharsCH = function(){
+      var chars = new Array();
+      for (var i = 0; i < this.length; i++){
+        chars[i] = [this.substr(i, 1), this.isCHS(i)];
+      }
+      String.prototype.charsArray = chars;
+      return chars;
+    };
+
+    //截取字符串（从start字节到end字节）
+    String.prototype.subCHString = function(start, end){
+      var len = 0;
+      var str = "";
+      this.strToCharsCH();
+      for (var i = 0; i < this.length; i++) {
+        if(this.charsArray[i][1])
+          len += 2;
+        else
+          len++;
+        if (end < len)
+          return str;
+        else if (start < len)
+          str += this.charsArray[i][0];
+      }
+      return str;
+    };
+
+
+    export default {
         data() {
             return {
               scope: {
@@ -154,15 +214,24 @@ import {BrowserWindow} from "electron";
                     // jydm: '',
                     // jydmLength: '2',
                     jgzhmc: '',
-                    jgzh: '',
-                    zxczy: '',
                     lsh:'',
-                    xzsj: '',
-                    xzsm: '',
+
                     ip: '172.31.207.11',
                     port: '46013',
                     fsbw: '',
-                    options: [{
+                    fhm: '',
+                    jkbh: '',
+                    jkzh: '',
+                    jgyhmc: '',
+                    kfqymc: '',
+                    jklx: '',
+                    jkje: '',
+                    gfrmc: '',
+                    gfrzj: '',
+                    htbh: '',
+                    fwzl: '',
+                    filecontent: '',
+                  options: [{
                         value: '172.31.207.10',
                         label: '开发环境-172.31.207.10'
                     }, {
@@ -178,15 +247,55 @@ import {BrowserWindow} from "electron";
                 },
                 rules: {
                     name: [
-                        { required: false, message: '银行冻结监管账户确认', trigger: 'blur' },
-                        { min: 0, max: 100, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        { required: false, message: '银行冻结监管账户确认', trigger: 'change' },
+                        { min: 0, max: 100, message: '长度在 3 到 5 个字符', trigger: 'change' }
                     ],
-                    region: [
-                        { required: false, message: '请选择活动区域', trigger: 'change' }
-                    ],
-                    jgzh: [
-                        { required: true, message: '请输入监管账户', trigger: 'change' }
-                    ],
+                  fhm: [
+                    { required: false, message: '返回码2位，00成功，其他失败', trigger: 'change' },
+                    { min: 0, max: 2, message: '长度2个字符', trigger: 'change' }
+                  ],
+                  jkbh: [
+                    { required: false, message: '缴款编号', trigger: 'change' },
+                    { min: 0, max: 14, message: '长度14个字符', trigger: 'change' }
+                  ],
+                  jkzh: [
+                    { required: false, message: '缴款账号（监管账号）', trigger: 'change' },
+                    { min: 0, max: 30, message: '长度30个字符', trigger: 'change' }
+                  ],
+                  jgyhmc: [
+                    { required: false, message: '监管银行名称', trigger: 'change' },
+                    { min: 0, max: 100, message: '长度100个字符', trigger: 'change' }
+                  ],
+                  kfqymc: [
+                    { required: false, message: '开发企业名称', trigger: 'change' },
+                    { min: 0, max: 100, message: '长度100 个字符', trigger: 'change' }
+                  ],
+                  jklx: [
+                    { required: false, message: '缴款类型', trigger: 'change' },
+                    { min: 0, max: 2, message: '长度 2个字符', trigger: 'change' }
+                  ],
+                  jkje: [
+                    { required: false, message: '缴款金额', trigger: 'change' },
+                    { min: 0, max: 18, message: '长度18个字符', trigger: 'change' }
+                  ],
+                  gfrmc: [
+                    { required: false, message: '购房人名称', trigger: 'change' },
+                    { min: 0, max: 100, message: '长度100 个字符', trigger: 'change' }
+                  ],
+                  gfrzj: [
+                    { required: false, message: '购房人证件', trigger: 'change' },
+                    { min: 0, max: 50, message: '长度50 个字符', trigger: 'change' }
+                  ],
+                  htbh: [
+                    { required: false, message: '合同编号', trigger: 'change' },
+                    { min: 0, max: 50, message: '长度50 个字符', trigger: 'change' }
+                  ],
+                  fwzl: [
+                    { required: false, message: '房屋坐落', trigger: 'change' },
+                    { min: 0, max: 100, message: '长度100 个字符', trigger: 'change' }
+                  ],
+
+
                     // date1: [
                     //     { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
                     // ],
@@ -200,7 +309,7 @@ import {BrowserWindow} from "electron";
                         { required: false, message: '请选择活动资源', trigger: 'change' }
                     ],
                     desc: [
-                        { required: false, message: '请填写活动形式', trigger: 'blur' }
+                        { required: false, message: '请填写活动形式', trigger: 'change' }
                     ]
                 }
             };
@@ -214,8 +323,7 @@ import {BrowserWindow} from "electron";
               var request = require('request');
               var qs = require('querystring');
 
-              var post_data = {conent: 123};//这是需要提交的数据
-              var content = _this.ruleForm.jgzh;
+              var content = _this.ruleForm.fhm;
 
 
               console.log("content:", content);
@@ -225,7 +333,7 @@ import {BrowserWindow} from "electron";
               var enurl = encodeURIComponent('中三ss4')
               console.log(enurl)
               request({
-                url:  'http://localhost:9527/py/textReader?content=' + enurl+'&code=7001&program=wz',
+                url:  'http://118.24.52.46:9527/py/textReader?content=' + enurl+'&code=7001&program=wz',
                 method: "post"
                 // ,
                 // headers: {
@@ -236,8 +344,27 @@ import {BrowserWindow} from "electron";
 
               }, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                  console.log(response)
-                  _this.ruleForm.jgzh=response.body
+                  _this.ruleForm.filecontent=response.body
+                  console.log('文件内容' + _this.ruleForm.filecontent)
+                  var resO = response.body
+
+                  var iconv = require('iconv-lite')
+                  var res =  iconv.decode(new Buffer(resO), 'gbk');
+
+                  _this.ruleForm.fhm=rtrim(res.subCHString(20,22))
+                  _this.ruleForm.jkbh=rtrim(res.subCHString(22,36))
+                  _this.ruleForm.jkzh=rtrim(res.subCHString(36,66))
+                  _this.ruleForm.jgyhmc=rtrim(res.subCHString(66,166))
+                  _this.ruleForm.kfqymc=rtrim(res.subCHString(166,266))
+                  _this.ruleForm.jklx=rtrim(res.subCHString(266,268))
+                  _this.ruleForm.jkje=rtrim(res.subCHString(268,286))
+
+                  _this.ruleForm.gfrmc=rtrim(res.subCHString(286,386))
+                  _this.ruleForm.gfrzj=rtrim(res.subCHString(386,436))
+                  _this.ruleForm.htbh=rtrim(res.subCHString(436,486))
+                  _this.ruleForm.fwzl=rtrim(res.subCHString(486,586))
+
+
                 } else {
                   console.log('error了' + error)
                 }
@@ -281,22 +408,33 @@ import {BrowserWindow} from "electron";
               if (valid) {
                 // console.log("字符串的长度 +" +getLength(_this.ruleForm.name))
 
+                console.log('传递的文件内容' + _this.ruleForm.filecontent)
 
                 var request = require('request');
                 var qs=require('querystring');
 
                 var post_data={conent:123};//这是需要提交的数据
-                var content=_this.ruleForm.jgzh;
+                var content= _this.ruleForm.filecontent.subCHString(0,20)
+                            + getRealLengthReqString(_this.ruleForm.fhm ,2)  + getRealLengthReqString(_this.ruleForm.jkbh,14)
+                            + getRealLengthReqString(_this.ruleForm.jkzh ,30)  + getRealLengthReqString(_this.ruleForm.jgyhmc ,100)
+                    + getRealLengthReqString(_this.ruleForm.kfqymc ,100)  + getRealLengthReqString(_this.ruleForm.jklx ,2)
+                    + getRealLengthReqString(_this.ruleForm.jkje ,18)  + getRealLengthReqString(_this.ruleForm.gfrmc ,100)
+                    + getRealLengthReqString(_this.ruleForm.gfrzj ,50)  + getRealLengthReqString(_this.ruleForm.htbh ,50)
+                    + getRealLengthReqString(_this.ruleForm.fwzl ,100)
+
+
+
 
 
                 console.log("content:",content);
                 // console.log("\n");
 
-
-                var enurl= encodeURIComponent(content)
-                console.log(enurl)
+                var iconv = require('iconv-lite')
+                var req =  iconv.encode(new Buffer(content), 'gbk');
+                var enurl= encodeURIComponent(req)
+                console.log('enurl ' + enurl)
                 request({
-                  url: 'http://localhost:9527/py/textUpload?content='+enurl+'&code=7001&program=wz',
+                  url: 'http://118.24.52.46:9527/py/textUpload?content='+enurl+'&code=7001&program=wz',
                   method: "post",
                   headers: {
                     "content-type": "application/json",
@@ -307,8 +445,10 @@ import {BrowserWindow} from "electron";
                 }, function(error, response, body) {
                   if (!error && response.statusCode == 200) {
                     console.log('')
+                    alert('成功')
                   }else {
                     console.log('error了' + error)
+                    alert('失败，检查挡板服务器9527端口')
                   }
                 })
 
@@ -344,15 +484,15 @@ import {BrowserWindow} from "electron";
                         // console.log(rightPad(1022,6))
                         var realJgzh = getRealLengthReqString(_this.ruleForm.jgzh,30);
 
-                        var zxczy = getRealLengthReqString(_this.ruleForm.zxczy,20)
+                        var jkzh = getRealLengthReqString(_this.ruleForm.jkzh,20)
                         var lsh = formatDate(new Date().getTime(),'YYYYMMDDhhmmss')+randomNum(100000,999999);
                         var realLsh = lsh
                         var xzsj =formatDate(new Date().getTime(),'YYYY/MM/DD hh:mm:ss');
                         var realXzsj = getRealLengthReqString(xzsj,20)
-                        var realxzsm = getRealLengthReqString(_this.ruleForm.xzsm,200);
+                        var realjgyhmc = getRealLengthReqString(_this.ruleForm.jgyhmc,200);
 
                         var reqString = bc + jydm + yhdm + ywjym + jmms + realJgzhmc + realJgzh
-                                         + zxczy + realLsh + realXzsj + realxzsm;
+                                         + jkzh + realLsh + realXzsj + realjgyhmc;
                         _this.ruleForm.fsbw = reqString;
                         console.log("请求字符串" )
                         console.log(reqString);

@@ -62,8 +62,8 @@ export default new Router({
 
     },{
       path:'/',
-      name: '7001-page',
-      component: require('@/components/7001Page').default
+      name: 'Wz01-page',
+      component: require('@/components/Wz01Page').default
     }
   ]
 })
