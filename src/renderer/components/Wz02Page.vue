@@ -1,8 +1,10 @@
 import {BrowserWindow} from "electron";
 <template>
     <div>
-        <el-button type="primary" disabled><router-link id ="limitReq" to="/">挡板——梧州应缴资金查询响应</router-link></el-button>
-        <el-button type="success" disabled><router-link id ="balanceReq" to="/balanceReq">余额查询</router-link></el-button>
+      <el-button type="primary" disabled><router-link id ="Wz02Req" to="/">挡板——梧州应付资金查询响应</router-link></el-button>
+      <el-button type="primary" disabled><router-link id ="Wz04Req" to="/Wz04">挡板——梧州应付资金查询响应</router-link></el-button>
+
+      <el-button type="success" disabled><router-link id ="balanceReq" to="/balanceReq">余额查询</router-link></el-button>
         <el-button type="primary" disabled><router-link id ="stateReq" to="/stateReq">监管状态告知</router-link></el-button>
         <el-button type="success" disabled><router-link id ="unfreezeReq" to="/unfreezeReq">监管机构解除监管账户限制确认</router-link></el-button>
 
@@ -12,9 +14,9 @@ import {BrowserWindow} from "electron";
 
         </el-form-item>
 
-        <el-form-item label="返回码" prop="fhm">
-            <el-input v-model="ruleForm.fhm"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="返回码" prop="fhm">-->
+<!--            <el-input v-model="ruleForm.fhm"></el-input>-->
+<!--        </el-form-item>-->
 
 
         <el-form-item label="缴款编号" prop="jkbh">
@@ -57,7 +59,7 @@ import {BrowserWindow} from "electron";
         </el-form-item>
 
         <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>
+<!--            <el-button type="primary" @click="submitForm('ruleForm')">发送</el-button>-->
             <el-button @click="resetForm('ruleForm')">重置</el-button>
           <el-button :loading="scope.row.loading" type="primary" @click="upload('ruleForm')">发送到挡板</el-button>
 
@@ -333,7 +335,7 @@ import {BrowserWindow} from "electron";
               var enurl = encodeURIComponent('中三ss4')
               console.log(enurl)
               request({
-                url:  'http://118.24.52.46:9527/py/textReader?content=' + enurl+'&code=7001&program=wz',
+                url:  'http://172.31.210.195:9527/py/textReader?content=' + enurl+'&code=02&program=wz',
                 method: "post"
                 // ,
                 // headers: {
@@ -346,10 +348,10 @@ import {BrowserWindow} from "electron";
                 if (!error && response.statusCode == 200) {
                   _this.ruleForm.filecontent=response.body
                   console.log('文件内容' + _this.ruleForm.filecontent)
-                  var resO = response.body
-
-                  var iconv = require('iconv-lite')
-                  var res =  iconv.decode(new Buffer(resO), 'gbk');
+                  var res = response.body
+                  _this.ruleForm.desc =  response.body
+                  // var iconv = require('iconv-lite')
+                  // var res =  iconv.decode(new Buffer(resO), 'gbk');
 
                   _this.ruleForm.fhm=rtrim(res.subCHString(20,22))
                   _this.ruleForm.jkbh=rtrim(res.subCHString(22,36))
@@ -367,10 +369,13 @@ import {BrowserWindow} from "electron";
 
                 } else {
                   console.log('error了' + error)
+                  alert('读取失败，请检查挡板主机pyService服务9527端口')
                 }
               })
 
-
+              if(_this.ruleForm.jkbh===''){
+                _this.ruleForm.jkbh='读取失败，请检查挡板主机pyService服务9527端口'
+              }
 
 
 
@@ -415,7 +420,7 @@ import {BrowserWindow} from "electron";
 
                 var post_data={conent:123};//这是需要提交的数据
                 var content= _this.ruleForm.filecontent.subCHString(0,20)
-                            + getRealLengthReqString(_this.ruleForm.fhm ,2)  + getRealLengthReqString(_this.ruleForm.jkbh,14)
+                            + '00' + getRealLengthReqString(_this.ruleForm.jkbh,14)
                             + getRealLengthReqString(_this.ruleForm.jkzh ,30)  + getRealLengthReqString(_this.ruleForm.jgyhmc ,100)
                     + getRealLengthReqString(_this.ruleForm.kfqymc ,100)  + getRealLengthReqString(_this.ruleForm.jklx ,2)
                     + getRealLengthReqString(_this.ruleForm.jkje ,18)  + getRealLengthReqString(_this.ruleForm.gfrmc ,100)
@@ -429,12 +434,11 @@ import {BrowserWindow} from "electron";
                 console.log("content:",content);
                 // console.log("\n");
 
-                var iconv = require('iconv-lite')
-                var req =  iconv.encode(new Buffer(content), 'gbk');
-                var enurl= encodeURIComponent(req)
+
+                var enurl= encodeURIComponent(content)
                 console.log('enurl ' + enurl)
                 request({
-                  url: 'http://118.24.52.46:9527/py/textUpload?content='+enurl+'&code=7001&program=wz',
+                  url: 'http://172.31.210.195:9527/py/textUpload?content='+enurl+'&code=02&program=wz',
                   method: "post",
                   headers: {
                     "content-type": "application/json",
@@ -445,6 +449,8 @@ import {BrowserWindow} from "electron";
                 }, function(error, response, body) {
                   if (!error && response.statusCode == 200) {
                     console.log('')
+                    _this.ruleForm.desc =  response.body
+
                     alert('成功')
                   }else {
                     console.log('error了' + error)
