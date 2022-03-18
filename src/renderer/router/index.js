@@ -61,13 +61,21 @@ export default new Router({
       component: require('@/components/UnfreezePage').default
 
     },{
-      path:'/',
+      path:'/Nw10',
+      name: 'Nw10-page',
+      component: require('@/components/Nw10Page').default
+    }, {
+      path:'',
       name: 'Wz02-page',
       component: require('@/components/Wz02Page').default
     },{
       path:'/Wz04',
       name: 'Wz04-page',
       component: require('@/components/Wz04Page').default
+    },{
+      path:'/Nw43',
+      name: 'Nw43-page',
+      component: require('@/components/Nw43Page').default
     }
   ]
 })

@@ -3,6 +3,8 @@ import {BrowserWindow} from "electron";
   <div>
     <el-button type="primary" disabled><router-link id ="Wz02Req" to="/">挡板——梧州应付资金查询响应</router-link></el-button>
     <el-button type="primary" disabled><router-link id ="Wz04Req" to="/Wz04">挡板——梧州应付资金查询响应</router-link></el-button>
+    <el-button type="primary" disabled><router-link id ="Nw10Req" to="/Nw10">挡板——南网查询客户欠费响应</router-link></el-button>
+    <el-button type="primary" disabled><router-link id ="Nw43Req" to="/Nw43">挡板——南网查询客户信息交易响应</router-link></el-button>
 
     <el-button type="success" disabled><router-link id ="balanceReq" to="/balanceReq">余额查询</router-link></el-button>
     <el-button type="primary" disabled><router-link id ="stateReq" to="/stateReq">监管状态告知</router-link></el-button>
